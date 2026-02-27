@@ -39,3 +39,9 @@
 
 # debug information files
 *.dwo
+
+# visual studio folders
+.vs/
+x64
+Debug
+Release

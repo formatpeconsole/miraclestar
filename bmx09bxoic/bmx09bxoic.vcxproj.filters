@@ -11,10 +11,32 @@
     </ClCompile>
     <ClCompile Include="threadpool\threadpool.cpp" />
     <ClCompile Include="main\dllInstance.cpp" />
+    <ClCompile Include="hooks\hooker.cpp" />
+    <ClCompile Include="hooks\targets\d3d.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_demo.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_draw.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_impl_dx11.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_impl_win32.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_tables.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_freetype.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="threadpool\threadpool.h" />
     <ClInclude Include="main\dllInstance.h" />
     <ClInclude Include="mem\raii.h" />
+    <ClInclude Include="hooks\hooker.h" />
+    <ClInclude Include="hooks\targets\d3d.h" />
+    <ClInclude Include="hooks\targets\targets.h" />
+    <ClInclude Include="deps\imguiFramework\imconfig.h" />
+    <ClInclude Include="deps\imguiFramework\imgui.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_impl_dx11.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_impl_win32.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_internal.h" />
+    <ClInclude Include="deps\imguiFramework\imstb_rectpack.h" />
+    <ClInclude Include="deps\imguiFramework\imstb_textedit.h" />
+    <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_freetype.h" />
   </ItemGroup>
 </Project>

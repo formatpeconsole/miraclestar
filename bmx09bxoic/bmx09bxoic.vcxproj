@@ -73,6 +73,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows\include;$(SolutionDir)vcpkg_installed\x64-windows\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows\include\lunasvg;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows\debug\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows\include;$(SolutionDir)vcpkg_installed\x64-windows\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows\include\lunasvg;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,6 +129,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>lunasvg.lib;plutosvg.lib;plutovg.lib;freetyped.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,14 +149,37 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>lunasvg.lib;plutosvg.lib;plutovg.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="deps\imguiFramework\imgui.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_demo.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_draw.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_freetype.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_impl_dx11.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_impl_win32.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_tables.cpp" />
+    <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
+    <ClCompile Include="hooks\hooker.cpp" />
+    <ClCompile Include="hooks\targets\d3d.cpp" />
     <ClCompile Include="main\dllInstance.cpp" />
     <ClCompile Include="main\dllmain.cpp" />
     <ClCompile Include="threadpool\threadpool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="deps\imguiFramework\imconfig.h" />
+    <ClInclude Include="deps\imguiFramework\imgui.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_freetype.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_impl_dx11.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_impl_win32.h" />
+    <ClInclude Include="deps\imguiFramework\imgui_internal.h" />
+    <ClInclude Include="deps\imguiFramework\imstb_rectpack.h" />
+    <ClInclude Include="deps\imguiFramework\imstb_textedit.h" />
+    <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
+    <ClInclude Include="hooks\hooker.h" />
+    <ClInclude Include="hooks\targets\d3d.h" />
+    <ClInclude Include="hooks\targets\targets.h" />
     <ClInclude Include="main\dllInstance.h" />
     <ClInclude Include="mem\raii.h" />
     <ClInclude Include="threadpool\threadpool.h" />

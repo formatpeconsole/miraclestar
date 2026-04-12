@@ -13,6 +13,7 @@
     <ClCompile Include="main\dllInstance.cpp" />
     <ClCompile Include="hooks\hooker.cpp" />
     <ClCompile Include="hooks\targets\d3d.cpp" />
+    <ClCompile Include="mem\sigscan.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_demo.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_draw.cpp" />
@@ -29,6 +30,8 @@
     <ClInclude Include="hooks\hooker.h" />
     <ClInclude Include="hooks\targets\d3d.h" />
     <ClInclude Include="hooks\targets\targets.h" />
+    <ClInclude Include="mem\sigscan.h" />
+    <ClInclude Include="mem\ptr.h" />
     <ClInclude Include="deps\imguiFramework\imconfig.h" />
     <ClInclude Include="deps\imguiFramework\imgui.h" />
     <ClInclude Include="deps\imguiFramework\imgui_impl_dx11.h" />

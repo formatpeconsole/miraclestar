@@ -1,8 +1,7 @@
 {
   "dependencies": [
-    "fmt",
+    "freetype",
     "lunasvg",
-    "plutosvg",
-    "freetype"
+    "plutosvg"
   ]
 }

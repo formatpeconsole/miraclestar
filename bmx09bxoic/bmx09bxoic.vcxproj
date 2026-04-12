@@ -108,8 +108,7 @@
     <ClCompile Include="deps\imguiFramework\imgui_impl_win32.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_tables.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
-    <ClCompile Include="hooks\hooker.cpp" />
-    <ClCompile Include="hooks\targets\d3d.cpp" />
+    <ClCompile Include="in-game\sigs\sigs-handles.cpp" />
     <ClCompile Include="main\dllInstance.cpp" />
     <ClCompile Include="main\dllmain.cpp" />
     <ClCompile Include="mem\sigscan.cpp" />
@@ -125,9 +124,7 @@
     <ClInclude Include="deps\imguiFramework\imstb_rectpack.h" />
     <ClInclude Include="deps\imguiFramework\imstb_textedit.h" />
     <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
-    <ClInclude Include="hooks\hooker.h" />
-    <ClInclude Include="hooks\targets\d3d.h" />
-    <ClInclude Include="hooks\targets\targets.h" />
+    <ClInclude Include="in-game\sigs\sigs-handles.h" />
     <ClInclude Include="main\dllInstance.h" />
     <ClInclude Include="mem\ptr.h" />
     <ClInclude Include="mem\raii.h" />

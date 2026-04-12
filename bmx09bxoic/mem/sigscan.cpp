@@ -5,26 +5,23 @@ namespace sigscan
 static std::vector<int> patternToByte(const char* mask)
 {
     std::vector<int> result{};
-    size_t len = strlen(mask);
-    size_t i = 0;
+    auto bytes = std::vector<int>{};
+    auto start = const_cast<char*>(mask);
+    auto end = const_cast<char*>(mask) + strlen(mask);
 
-    while (i < len)
+    for (auto current = start; current < end; ++current)
     {
-        if (mask[i] == '?')
+        if (*current == '?') 
         {
-            i++;
-            if (i < len && mask[i] == '?')
-                i++;
-            result.push_back(-1);
+            ++current;
+            if (*current == '?')
+                ++current;
+            bytes.push_back(-1);
         }
-        else
-        {
-            char hex[3] = { mask[i], mask[i + 1], '\0' };
-            result.push_back((int)strtoul(hex, nullptr, 16));
-            i += 2;
-        }
+        else 
+            bytes.push_back(strtoul(current, &current, 16));
     }
-    return result;
+    return bytes;
 }
 
 Ptr find(HANDLE module, const std::string& mask)
@@ -44,7 +41,7 @@ Ptr find(HANDLE module, const std::string& mask)
         bool found = true;
         for (auto j = 0ul; j < s; ++j)
         {
-            if (scannedBytes[i + j] != (uint8_t)d[j] && d[j] != -1)
+            if (scannedBytes[i + j] != d[j] && d[j] != -1)
             {
                 found = false;
                 break;
@@ -52,8 +49,8 @@ Ptr find(HANDLE module, const std::string& mask)
         }
 
         if (found)
-            return Ptr((uintptr_t)&scannedBytes[i]);
+            return (uintptr_t)&scannedBytes[i];
     }
-    return Ptr(0);
+    return 0;
 }
 }

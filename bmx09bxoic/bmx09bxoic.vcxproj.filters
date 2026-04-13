@@ -21,6 +21,8 @@
     <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_freetype.cpp" />
     <ClCompile Include="in-game\sigs\sigs-handles.cpp" />
+    <ClCompile Include="hooks\hooks.cpp" />
+    <ClCompile Include="render\render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="threadpool\threadpool.h" />
@@ -38,5 +40,7 @@
     <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
     <ClInclude Include="deps\imguiFramework\imgui_freetype.h" />
     <ClInclude Include="in-game\sigs\sigs-handles.h" />
+    <ClInclude Include="hooks\hooks.h" />
+    <ClInclude Include="render\render.h" />
   </ItemGroup>
 </Project>

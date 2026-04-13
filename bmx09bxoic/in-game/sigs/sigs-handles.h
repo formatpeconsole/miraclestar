@@ -13,6 +13,7 @@ struct Signatures
 {
     Ptr overlay_Present;
     Ptr overlay_ResizeBuffers;
+    Ptr overlay_CreateSwapChain;
 };
 
 extern Signatures& getSignaturesInstance();

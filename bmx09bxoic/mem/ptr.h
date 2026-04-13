@@ -10,27 +10,27 @@ public:
     Ptr(uintptr_t other) : ptr(other) {}
 
     template<typename U>
-    U As()
+    U as()
     {
         return reinterpret_cast<U>(ptr);
     }
 
-    Ptr Add(uintptr_t offset)
+    Ptr add(uintptr_t offset)
     {
         return Ptr(ptr + offset);
     }
 
-    Ptr Sub(uintptr_t offset)
+    Ptr sub(uintptr_t offset)
     {
         return Ptr(ptr - offset);
     }
 
-    Ptr Deref()
+    Ptr deref()
     {
         return *reinterpret_cast<uintptr_t*>(ptr);
     }
 
-    uintptr_t Raw() const
+    uintptr_t raw() const
     {
         return ptr;
     }

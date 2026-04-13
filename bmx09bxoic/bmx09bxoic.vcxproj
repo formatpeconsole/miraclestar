@@ -22,7 +22,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -45,12 +45,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows-static\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(SolutionDir)bmx09bxoic\deps\minHook;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows-static\lib;$(LibraryPath);$(SolutionDir)bmx09bxoic\deps\minHook</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows-static\debug\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(SolutionDir)bmx09bxoic\deps\minHook;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows-static\debug\lib;$(LibraryPath);$(SolutionDir)bmx09bxoic\deps\minHook</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
@@ -73,7 +73,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>bz2.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlib.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libMinHook.x64.lib;bz2.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlib.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -96,7 +96,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>bz2d.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlibd.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16d.lib;freetyped.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libMinHook.x64.lib;bz2d.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlibd.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16d.lib;freetyped.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -108,10 +108,12 @@
     <ClCompile Include="deps\imguiFramework\imgui_impl_win32.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_tables.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
+    <ClCompile Include="hooks\hooks.cpp" />
     <ClCompile Include="in-game\sigs\sigs-handles.cpp" />
     <ClCompile Include="main\dllInstance.cpp" />
     <ClCompile Include="main\dllmain.cpp" />
     <ClCompile Include="mem\sigscan.cpp" />
+    <ClCompile Include="render\render.cpp" />
     <ClCompile Include="threadpool\threadpool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,11 +126,13 @@
     <ClInclude Include="deps\imguiFramework\imstb_rectpack.h" />
     <ClInclude Include="deps\imguiFramework\imstb_textedit.h" />
     <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
+    <ClInclude Include="hooks\hooks.h" />
     <ClInclude Include="in-game\sigs\sigs-handles.h" />
     <ClInclude Include="main\dllInstance.h" />
     <ClInclude Include="mem\ptr.h" />
     <ClInclude Include="mem\raii.h" />
     <ClInclude Include="mem\sigscan.h" />
+    <ClInclude Include="render\render.h" />
     <ClInclude Include="threadpool\threadpool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

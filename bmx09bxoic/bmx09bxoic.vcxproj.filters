@@ -23,6 +23,7 @@
     <ClCompile Include="in-game\sigs\sigs-handles.cpp" />
     <ClCompile Include="hooks\hooks.cpp" />
     <ClCompile Include="render\render.cpp" />
+    <ClCompile Include="gui\gui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="threadpool\threadpool.h" />
@@ -42,5 +43,6 @@
     <ClInclude Include="in-game\sigs\sigs-handles.h" />
     <ClInclude Include="hooks\hooks.h" />
     <ClInclude Include="render\render.h" />
+    <ClInclude Include="gui\gui.h" />
   </ItemGroup>
 </Project>

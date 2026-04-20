@@ -159,7 +159,6 @@ private:
 struct UiBlock
 {
     bool blocked = false;
-    bool valueSet = false;
     int bindType = BIND_NONE;
 };
 
@@ -252,33 +251,27 @@ public:
                 continue;
             }
 
-            bool erased = false;
             if (bind->getPressed())
             {
                 if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
                 {
-                    uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, false, bind->getType() }));
+                    uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType() }));
                 }
 
                 bool canHandleBlock = false;
                 const auto foundBlock = uiBlock.find(bind->getItemPtr());
                 if (foundBlock != uiBlock.end())
-                {
                     canHandleBlock = true;
-                }
 
-                if (canHandleBlock && !foundBlock->second.blocked) {
+                if (canHandleBlock && !foundBlock->second.blocked)
                     bind->setValueToNew();
-
-                    if (!foundBlock->second.valueSet)
-                        foundBlock->second.valueSet = true;
-                }
 
                 if (canHandleBlock)
                     foundBlock->second.blocked = true;
             }
             else
             {
+                bool erased = false;
                 const auto foundBlock = uiBlock.find(bind->getItemPtr());
                 if (foundBlock != uiBlock.end())
                 {
@@ -288,10 +281,10 @@ public:
                         erased = true;
                     }
                 }
-            }
 
-            if (erased)
-                bind->setValueToOld();
+                if (erased)
+                    bind->setValueToOld();
+            }
         }
     }
 };

@@ -10,8 +10,10 @@
 #include "../in-game/sigs/sigs-handles.h"
 #include "../hooks/hooks.h"
 #include "../render/render.h"
+#include "../gui/gui.h"
 
 using namespace std::chrono_literals;
+using namespace gui;
 
 Dll& getDllInstance()
 {
@@ -61,7 +63,7 @@ static void hookGameFunctions()
     DEBUG_LOG("[+]");
 }
 
-static void unHookGameFunctions()
+static void unhookGameFunctions()
 {
     DEBUG_LOG("destroying hooks...");
 
@@ -77,12 +79,10 @@ void APIENTRY Main(HMODULE handle)
 {
     createConsole();
 
-    auto& threadPool = getSimpleThreadPoolInstance();
-    threadPool.init();
+    gui::init();
+    getSimpleThreadPoolInstance().init();
 
     DEBUG_LOG("creating instance...");
-
-    auto& instance = getDllInstance();
 
     DEBUG_LOG("[+]");
     DEBUG_LOG("continue...");
@@ -93,14 +93,15 @@ void APIENTRY Main(HMODULE handle)
 
     const auto state = MessageBoxA(0, "HI", 0, 0);
     if (state == IDOK)
-        instance.shouldQuit = true;
+        getDllInstance().shouldQuit = true;
 
-    while (!instance.shouldQuit)
+    while (!getDllInstance().shouldQuit)
         std::this_thread::sleep_for(1s);
 
-    threadPool.destroy();
-    unHookGameFunctions();
+    getSimpleThreadPoolInstance().destroy();
+    unhookGameFunctions();
     render::destroy();
+    gui::destroy();
 
     destroyConsole();
     FreeLibraryAndExitThread(handle, 0);
@@ -111,13 +112,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     LPVOID lpReserved
 )
 {
-    switch (ul_reason_for_call)
-    {
-    case DLL_PROCESS_ATTACH:
-    {
+    if (ul_reason_for_call == DLL_PROCESS_ATTACH)
         CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Main, hModule, 0, 0);
-    }
-    break;
-    }
+
     return TRUE;
 }

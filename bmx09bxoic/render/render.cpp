@@ -1,29 +1,31 @@
 #include "render.h"
 
 #include "../hooks/hooks.h"
+#include "../gui/gui.h"
 
 namespace render
 {
+using namespace gui;
+
 void init(IDXGISwapChain* pSwapChain)
 {
-    auto& renderInfo = getRenderInfoInstance();
-    if (renderInfo.init)
+    if (getRenderInfoInstance().init)
         return;
 
     DXGI_SWAP_CHAIN_DESC SwapChainDesc;
 
-    if (FAILED(pSwapChain->GetDevice(IID_PPV_ARGS(&renderInfo.device))))
+    if (FAILED(pSwapChain->GetDevice(IID_PPV_ARGS(&getRenderInfoInstance().device))))
         return;
 
-    renderInfo.device->GetImmediateContext(&renderInfo.deviceContext);
+    getRenderInfoInstance().device->GetImmediateContext(&getRenderInfoInstance().deviceContext);
 
     if (FAILED(pSwapChain->GetDesc(&SwapChainDesc)))
         return;
 
-    renderInfo.cs2Window = SwapChainDesc.OutputWindow;
-    renderInfo.imguiContext = ImGui::CreateContext();
+    getRenderInfoInstance().cs2Window = SwapChainDesc.OutputWindow;
+    getRenderInfoInstance().imguiContext = ImGui::CreateContext();
 
-    ImGui::SetCurrentContext(renderInfo.imguiContext);
+    ImGui::SetCurrentContext(getRenderInfoInstance().imguiContext);
 
     auto& io = ImGui::GetIO();
     io.IniFilename = nullptr;
@@ -32,31 +34,28 @@ void init(IDXGISwapChain* pSwapChain)
     io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
-    ImGui_ImplWin32_Init(renderInfo.cs2Window);
-    ImGui_ImplDX11_Init(renderInfo.device, renderInfo.deviceContext);
+    ImGui_ImplWin32_Init(getRenderInfoInstance().cs2Window);
+    ImGui_ImplDX11_Init(getRenderInfoInstance().device, getRenderInfoInstance().deviceContext);
 
-    renderInfo.wndProcOrig = (WNDPROC)SetWindowLongPtrA(renderInfo.cs2Window, GWLP_WNDPROC, (LONG_PTR)hooks::Hooked_WndProc);
+    getRenderInfoInstance().wndProcOrig = (WNDPROC)SetWindowLongPtrA(getRenderInfoInstance().cs2Window, GWLP_WNDPROC, (LONG_PTR)hooks::Hooked_WndProc);
 
     ImGui_ImplDX11_InvalidateDeviceObjects();
     ImGui_ImplDX11_CreateDeviceObjects();
-
-    renderInfo.init = true;
+    getRenderInfoInstance().init = true;
 }
 
 void clearRenderTargetView()
 {
-    auto& renderInfo = getRenderInfoInstance();
-    if (renderInfo.renderTargetView)
+    if (getRenderInfoInstance().renderTargetView)
     {
-        renderInfo.renderTargetView->Release();
-        renderInfo.renderTargetView = nullptr;
+        getRenderInfoInstance().renderTargetView->Release();
+        getRenderInfoInstance().renderTargetView = nullptr;
     }
 }
 
 void destroy()
 {
-    auto& renderInfo = getRenderInfoInstance();
-    SetWindowLongPtrA(renderInfo.cs2Window, GWLP_WNDPROC, (LONG_PTR)renderInfo.wndProcOrig);
+    SetWindowLongPtrA(getRenderInfoInstance().cs2Window, GWLP_WNDPROC, (LONG_PTR)getRenderInfoInstance().wndProcOrig);
 
     clearRenderTargetView();
 
@@ -65,7 +64,7 @@ void destroy()
 
     ImGui::DestroyContext();
 
-    renderInfo.init = false;
+    getRenderInfoInstance().init = false;
 }
 
 void onResize()
@@ -75,12 +74,11 @@ void onResize()
 
 void onRender(IDXGISwapChain* pSwapChain)
 {
-    auto& renderInfo = getRenderInfoInstance();
-    if (!renderInfo.init)
+    if (!getRenderInfoInstance().init)
         init(pSwapChain);
     else
     {
-        if (!renderInfo.renderTargetView)
+        if (!getRenderInfoInstance().renderTargetView)
         {
             ID3D11Texture2D* pBackBuffer = nullptr;
             pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
@@ -93,34 +91,37 @@ void onRender(IDXGISwapChain* pSwapChain)
 
             if (pBackBuffer)
             {
-                renderInfo.device->CreateRenderTargetView(pBackBuffer, &RenderTargetDesc, &renderInfo.renderTargetView);
+                getRenderInfoInstance().device->CreateRenderTargetView(pBackBuffer, &RenderTargetDesc, &getRenderInfoInstance().renderTargetView);
                 pBackBuffer->Release();
             }
         }
 
-        ImGui::SetCurrentContext(renderInfo.imguiContext);
+        ImGui::SetCurrentContext(getRenderInfoInstance().imguiContext);
 
-        renderInfo.deviceContext->OMGetRenderTargets(1, &renderInfo.mainRenderTarget, 0);
-        renderInfo.deviceContext->OMSetRenderTargets(1, &renderInfo.renderTargetView, 0);
+        getRenderInfoInstance().deviceContext->OMGetRenderTargets(1, &getRenderInfoInstance().mainRenderTarget, 0);
+        getRenderInfoInstance().deviceContext->OMSetRenderTargets(1, &getRenderInfoInstance().renderTargetView, 0);
 
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
 
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowSize(ImVec2(780, 650));
-        ImGui::Begin("hi", nullptr, ImGuiWindowFlags_NoResize);
+        if (getMenuInstance().opened)
         {
+            ImGui::SetNextWindowSize(ImVec2(780, 650));
+            ImGui::Begin("hi", &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
+            {
 
+            }
+            ImGui::End();
         }
-        ImGui::End();
 
         ImGui::EndFrame();
         ImGui::Render();
 
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-        renderInfo.deviceContext->OMSetRenderTargets(1, &renderInfo.mainRenderTarget, 0);
+        getRenderInfoInstance().deviceContext->OMSetRenderTargets(1, &getRenderInfoInstance().mainRenderTarget, 0);
     }
 }
 

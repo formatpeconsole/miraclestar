@@ -41,7 +41,9 @@ HRESULT Hooked_Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags
     if (getDllInstance().shouldQuit)
         return originalPresent(pSwapChain, SyncInterval, Flags);
 
+    getMenuInstance().keyBindManager.updateAliveBindValues();
     getMenuInstance().keyBindManager.updateOtherBindStates();
+    getMenuInstance().keyBindManager.updateMainBindStates();
     render::onRender(pSwapChain);
 
     return originalPresent(pSwapChain, SyncInterval, Flags);

@@ -1,3 +1,4 @@
+#include <string>
 #include "gui.h"
 
 namespace gui
@@ -9,7 +10,24 @@ void init()
         &getMenuInstance().opened,
         &getMenuInstance().newOpened,
         BIND_TOGGLE,
+        ITEM_UI_OPEN,
         VK_INSERT
+    );
+
+    getMenuInstance().keyBindManager.addBind(
+        &getMenuInstance().testSlider,
+        &getMenuInstance().testSlider2,
+        BIND_HOLD,
+        ITEM_SLIDER,
+        'V'
+    );
+
+    getMenuInstance().keyBindManager.addBind(
+        &getMenuInstance().testSlider,
+        &getMenuInstance().testSlider2,
+        BIND_TOGGLE,
+        ITEM_SLIDER,
+        'N'
     );
 
     auto& bindList = getMenuInstance().keyBindManager.getBindList();
@@ -33,7 +51,8 @@ void destroy()
 
 void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    auto& bindList = getMenuInstance().keyBindManager.getBindList();
+    auto& bindManager = getMenuInstance().keyBindManager;
+    auto& bindList = bindManager.getBindList();
     const auto correctBind = std::find_if(bindList.begin(), bindList.end(), [wParam](const std::shared_ptr<IKeyBind>& keyBind)
         {
             return keyBind->getKey() == wParam;
@@ -84,13 +103,48 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
             break;
             }
-
-            if (bindToUpdate->getPressed())
-                bindToUpdate->setValueToNew();
-            else
-                bindToUpdate->setValueToOld();
         }
     }
+}
+
+std::string getBindType(int type)
+{
+    switch (type)
+    {
+    case BIND_ALWAYS_ON:
+        return "[+] Always On";
+    case BIND_HOLD:
+        return "[+] Hold";
+    case BIND_TOGGLE:
+        return "[+] Toggle";
+    case BIND_RELEASE:
+        return "[+] Release";
+    case BIND_FORCE_OFF:
+        return "[+] Force Off";
+    }
+    return {};
+}
+
+void renderDebugBindsWindow()
+{
+    auto& bindList = getMenuInstance().keyBindManager.getBindList();
+    ImGui::Begin("bind debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    {
+        ImGui::Text("binds: ");
+
+        int counter = 0;
+        for (auto bind : bindList)
+        {
+            if (bind->getItemType() == ITEM_UI_OPEN)
+                continue;
+
+            if (bind->getPressed())
+                ImGui::Text("%s -> %d", getBindType(bind->getType()).c_str(), counter);
+
+            ++counter;
+        }
+    }
+    ImGui::End();
 }
 
 Menu& getMenuInstance()

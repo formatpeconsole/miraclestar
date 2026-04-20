@@ -111,9 +111,12 @@ void onRender(IDXGISwapChain* pSwapChain)
             ImGui::SetNextWindowSize(ImVec2(780, 650));
             ImGui::Begin("hi", &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
             {
-
+                ImGui::SliderInt("Current", &getMenuInstance().testSlider, 0, 100);
+                ImGui::SliderInt("On Bind", &getMenuInstance().testSlider2, 0, 100);
             }
             ImGui::End();
+
+            renderDebugBindsWindow();
         }
 
         ImGui::EndFrame();

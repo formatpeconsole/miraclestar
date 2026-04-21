@@ -11,7 +11,8 @@ void init()
         &getMenuInstance().newOpened,
         BIND_TOGGLE,
         ITEM_UI_OPEN,
-        VK_INSERT
+        VK_INSERT,
+        {}
     );
 
     getMenuInstance().keyBindManager.addBind(
@@ -19,7 +20,8 @@ void init()
         &getMenuInstance().testSlider2,
         BIND_HOLD,
         ITEM_SLIDER,
-        'V'
+        'V',
+        "TestSlider 1"
     );
 
     getMenuInstance().keyBindManager.addBind(
@@ -27,7 +29,8 @@ void init()
         &getMenuInstance().testSlider3,
         BIND_TOGGLE,
         ITEM_SLIDER,
-        'N'
+        'N',
+        "TestSlider 1"
     );
 
     getMenuInstance().keyBindManager.addBind(
@@ -35,7 +38,8 @@ void init()
         &getMenuInstance().testSliderNew2,
         BIND_HOLD,
         ITEM_SLIDER,
-        'H'
+        'H',
+        "TestSlider 2"
     );
 
     getMenuInstance().keyBindManager.addBind(
@@ -43,7 +47,8 @@ void init()
         &getMenuInstance().testSliderNew3,
         BIND_TOGGLE,
         ITEM_SLIDER,
-        'J'
+        'J',
+        "TestSlider 2"
     );
 
     auto& bindList = getMenuInstance().keyBindManager.getBindList();
@@ -97,16 +102,16 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                     if (newState)
                     {
                         if (!bindToUpdate->getPressed())
-                            bindManager.onKeyDown();
+                            bindManager.onKeyDown(bindToUpdate);
                         else
-                            bindManager.onKeyUp();
+                            bindManager.onKeyUp(bindToUpdate);
 
                         bindToUpdate->setPressed(!bindToUpdate->getPressed());
                     }
                 }
                 else if (uMsg == WM_KEYUP)
                 {
-                    bindManager.onKeyUp();
+                    bindManager.onKeyUp(bindToUpdate);
                 }
             }
             break;
@@ -120,7 +125,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                     bool newState = !((lParam >> 30) & 1);
                     if (newState)
                     {
-                        bindManager.onKeyDown();
+                        bindManager.onKeyDown(bindToUpdate);
                         bindToUpdate->setPressed(releaseType ? false : true);
                     }
                 }
@@ -129,7 +134,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                     bool newState = ((lParam >> 30) & 1);
                     if (newState)
                     {
-                        bindManager.onKeyUp();
+                        bindManager.onKeyUp(bindToUpdate);
                         bindToUpdate->setPressed(releaseType ? true : false);
                     }
                 }
@@ -145,15 +150,15 @@ std::string getBindType(int type)
     switch (type)
     {
     case BIND_ALWAYS_ON:
-        return "[+] Always On";
+        return "Always On";
     case BIND_HOLD:
-        return "[+] Hold";
+        return "Hold";
     case BIND_TOGGLE:
-        return "[+] Toggle";
+        return "Toggle";
     case BIND_RELEASE:
-        return "[+] Release";
+        return "Release";
     case BIND_FORCE_OFF:
-        return "[+] Force Off";
+        return "Force Off";
     }
     return {};
 }
@@ -172,7 +177,9 @@ void renderDebugBindsWindow()
                 continue;
 
             if (bind->getPressed())
-                ImGui::Text("%s -> %d", getBindType(bind->getType()).c_str(), counter);
+            {
+                ImGui::Text("[+] %s -> %s | %s", bind->getBindName().c_str(), bind->getBindValue().c_str(), getBindType(bind->getType()).c_str());
+            }
 
             ++counter;
         }

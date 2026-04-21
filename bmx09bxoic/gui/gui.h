@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 #include <optional>
 #include <unordered_map>
 
@@ -55,6 +56,8 @@ namespace gui
         virtual void setValueToOld() = 0;
 
         virtual bool isValueSet() = 0;
+        virtual std::string getBindName() = 0;
+        virtual std::string getBindValue() = 0;
 
         virtual ~IKeyBind() = default;
     };
@@ -63,12 +66,14 @@ namespace gui
     class KeyBind : public IKeyBind
     {
     public:
-        KeyBind(T* item, T* bind, int type, int itemType, int key)
+        KeyBind(T* item, T* bind, int type, int itemType, int key, std::string name)
             : itemPtr(item),
             bindItemPtr(bind),
             type(type),
             itemType(itemType),
-            key(key) {
+            key(key),
+            name(name)
+        {
         }
 
         int getType() override
@@ -84,6 +89,16 @@ namespace gui
         int getKey() override
         {
             return key;
+        }
+
+        std::string getBindName() override
+        {
+            return name;
+        }
+
+        std::string getBindValue() override
+        {
+            return bindValue;
         }
 
         void* getItemPtr() override
@@ -129,6 +144,7 @@ namespace gui
         void setNewValue()
         {
             newValue = *bindItemPtr;
+            bindValue = std::to_string(newValue);
         }
 
         void setValueToNew()
@@ -165,12 +181,16 @@ namespace gui
 
         bool wrote = false;
         bool pressed = false;
+
+        std::string name{};
+        std::string bindValue{};
     };
 
     struct UiBlock
     {
         bool blocked = false;
         int bindType = BIND_NONE;
+        int activeKeyCount = 0;
     };
 
     using bindList = std::vector<std::shared_ptr<IKeyBind>>;
@@ -178,7 +198,6 @@ namespace gui
     {
     private:
         bindList keyBinds{};
-        int activeKeyCount = 0;
 
     public:
         std::unordered_map<void*, UiBlock> uiBlock{};
@@ -186,43 +205,24 @@ namespace gui
         void init()
         {
             keyBinds.reserve(MAX_BINDS);
-            activeKeyCount = 0;
         }
 
         void destroy()
         {
             keyBinds.clear();
             uiBlock.clear();
-            activeKeyCount = 0;
         }
 
         template<typename T>
-        void addBind(T* ptr, T* bindPtr, int type, int itemType, int key)
+        void addBind(T* ptr, T* bindPtr, int type, int itemType, int key, std::string name)
         {
-            std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, type, itemType, key);
+            std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, type, itemType, key, name);
             keyBinds.emplace_back(bind);
         }
 
         bindList& getBindList()
         {
             return keyBinds;
-        }
-
-        void onKeyDown()
-        {
-            activeKeyCount++;
-        }
-
-        void onKeyUp()
-        {
-            activeKeyCount--;
-            if (activeKeyCount < 0)
-                activeKeyCount = 0;
-        }
-
-        bool isLastKeyReleased() const
-        {
-            return activeKeyCount == 0;
         }
 
         void updateOtherBindStates()
@@ -261,6 +261,23 @@ namespace gui
                     continue;
 
                 bind->setNewValue();
+            }
+        }
+
+        void onKeyDown(const std::shared_ptr<IKeyBind>& bind)
+        {
+            const auto foundBlock = uiBlock.find(bind->getItemPtr());
+            if (foundBlock != uiBlock.end())
+                foundBlock->second.activeKeyCount++;
+        }
+
+        void onKeyUp(const std::shared_ptr<IKeyBind>& bind)
+        {
+            const auto foundBlock = uiBlock.find(bind->getItemPtr());
+            if (foundBlock != uiBlock.end())
+            {
+                if (foundBlock->second.activeKeyCount > 0)
+                    foundBlock->second.activeKeyCount--;
             }
         }
 
@@ -308,7 +325,7 @@ namespace gui
                     {
                         if (foundBlock->second.blocked && foundBlock->second.bindType == bind->getType())
                         {
-                            if (isLastKeyReleased())
+                            if (foundBlock->second.activeKeyCount <= 0)
                             {
                                 uiBlock.erase(foundBlock);
                                 erased = true;

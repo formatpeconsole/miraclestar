@@ -113,6 +113,11 @@ void onRender(IDXGISwapChain* pSwapChain)
             {
                 ImGui::SliderInt("Current", &getMenuInstance().testSlider, 0, 100);
                 ImGui::SliderInt("On Bind", &getMenuInstance().testSlider2, 0, 100);
+                ImGui::SliderInt("On Bind 2", &getMenuInstance().testSlider3, 0, 100);
+
+                ImGui::SliderInt("New", &getMenuInstance().testSliderNew, -100, 100);
+                ImGui::SliderInt("On Bind New", &getMenuInstance().testSliderNew2, -100, 100);
+                ImGui::SliderInt("On Bind New 2", &getMenuInstance().testSliderNew3, -100, 100);
             }
             ImGui::End();
 

@@ -23,7 +23,10 @@ hookedFuncs& getHookedFuncsInstance()
 LRESULT WINAPI Hooked_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if (wParam < VK_F13)
+    {
         gui::handleMainBinds(uMsg, wParam, lParam);
+        getMenuInstance().keyBindManager.updateMainBindStates();
+    }
 
     if (getMenuInstance().opened)
     {
@@ -43,7 +46,6 @@ HRESULT Hooked_Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags
 
     getMenuInstance().keyBindManager.updateAliveBindValues();
     getMenuInstance().keyBindManager.updateOtherBindStates();
-    getMenuInstance().keyBindManager.updateMainBindStates();
     render::onRender(pSwapChain);
 
     return originalPresent(pSwapChain, SyncInterval, Flags);

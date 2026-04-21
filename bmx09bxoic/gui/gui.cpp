@@ -24,10 +24,26 @@ void init()
 
     getMenuInstance().keyBindManager.addBind(
         &getMenuInstance().testSlider,
-        &getMenuInstance().testSlider2,
+        &getMenuInstance().testSlider3,
         BIND_TOGGLE,
         ITEM_SLIDER,
         'N'
+    );
+
+    getMenuInstance().keyBindManager.addBind(
+        &getMenuInstance().testSliderNew,
+        &getMenuInstance().testSliderNew2,
+        BIND_HOLD,
+        ITEM_SLIDER,
+        'H'
+    );
+
+    getMenuInstance().keyBindManager.addBind(
+        &getMenuInstance().testSliderNew,
+        &getMenuInstance().testSliderNew3,
+        BIND_TOGGLE,
+        ITEM_SLIDER,
+        'J'
     );
 
     auto& bindList = getMenuInstance().keyBindManager.getBindList();
@@ -79,7 +95,18 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 {
                     bool newState = !((lParam >> 30) & 1);
                     if (newState)
+                    {
+                        if (!bindToUpdate->getPressed())
+                            bindManager.onKeyDown();
+                        else
+                            bindManager.onKeyUp();
+
                         bindToUpdate->setPressed(!bindToUpdate->getPressed());
+                    }
+                }
+                else if (uMsg == WM_KEYUP)
+                {
+                    bindManager.onKeyUp();
                 }
             }
             break;
@@ -92,13 +119,19 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 {
                     bool newState = !((lParam >> 30) & 1);
                     if (newState)
+                    {
+                        bindManager.onKeyDown();
                         bindToUpdate->setPressed(releaseType ? false : true);
+                    }
                 }
                 else if (uMsg == WM_KEYUP)
                 {
                     bool newState = ((lParam >> 30) & 1);
                     if (newState)
+                    {
+                        bindManager.onKeyUp();
                         bindToUpdate->setPressed(releaseType ? true : false);
+                    }
                 }
             }
             break;

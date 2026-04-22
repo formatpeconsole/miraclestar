@@ -15,7 +15,7 @@ void init()
         {}
     );
 
-    getMenuInstance().keyBindManager.addBind(
+    /*getMenuInstance().keyBindManager.addBind(
         &getMenuInstance().testSlider,
         &getMenuInstance().testSlider2,
         BIND_HOLD,
@@ -31,7 +31,7 @@ void init()
         ITEM_SLIDER,
         'N',
         "TestSlider 1"
-    );
+    );*/
 
     getMenuInstance().keyBindManager.addBind(
         &getMenuInstance().testSliderNew,
@@ -45,9 +45,9 @@ void init()
     getMenuInstance().keyBindManager.addBind(
         &getMenuInstance().testSliderNew,
         &getMenuInstance().testSliderNew3,
-        BIND_TOGGLE,
+        BIND_HOLD,
         ITEM_SLIDER,
-        'J',
+        'H',
         "TestSlider 2"
     );
 

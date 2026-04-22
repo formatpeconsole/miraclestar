@@ -72,6 +72,23 @@ void onResize()
     destroy();
 }
 
+void addNewbind(int& counter)
+{
+    auto& newBind = getMenuInstance().testSliderBinds.emplace_back();
+    newBind.name = "Test Slider " + std::to_string(counter++);
+
+    getMenuInstance().keyBindManager.addBind(
+        &getMenuInstance().testSlider,
+        &newBind.value,
+        BIND_TOGGLE,
+        ITEM_SLIDER,
+        'V',
+        newBind.name
+    );
+}
+
+decltype(&addNewbind) bindCallback = addNewbind;
+
 void onRender(IDXGISwapChain* pSwapChain)
 {
     if (!getRenderInfoInstance().init)
@@ -112,8 +129,55 @@ void onRender(IDXGISwapChain* pSwapChain)
             ImGui::Begin("hi", &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
             {
                 ImGui::SliderInt("Current", &getMenuInstance().testSlider, 0, 100);
-                ImGui::SliderInt("On Bind", &getMenuInstance().testSlider2, 0, 100);
-                ImGui::SliderInt("On Bind 2", &getMenuInstance().testSlider3, 0, 100);
+                ImGui::SameLine();
+                if (ImGui::SmallButton("..."))
+                {
+                    ImGui::OpenPopup("bind_popup");
+                }
+
+                static int counter = 0;
+                if (ImGui::BeginPopup("bind_popup"))
+                {
+                    if (getMenuInstance().testSliderBinds.empty())
+                    {
+                        ImGui::Text("No binds found! Click + to add bind");
+
+                        if (ImGui::SmallButton("+##bind_add"))
+                        {
+                            bindCallback(counter);
+                        }
+                    }
+                    else
+                    {
+                        auto& sliderBinds = getMenuInstance().testSliderBinds;
+                        for (auto it = sliderBinds.begin();
+                            it != sliderBinds.end();)
+                        {
+                            ImGui::SliderInt(it->name.c_str(), &it->value, -100, 100);
+                            const std::string bindPlus = "+##bind_" + it->name;
+                            const std::string bindMinus = "-##bind_" + it->name;
+
+                            if (ImGui::SmallButton(bindPlus.c_str()))
+                            {
+                                bindCallback(counter);
+                                continue;
+                            }
+
+                            ImGui::SameLine();
+
+                            if (ImGui::SmallButton(bindMinus.c_str()))
+                            {
+                                getMenuInstance().keyBindManager.removeBind(getMenuInstance().keyBindManager.findBind(&it->value)->getBindName());
+                                it = sliderBinds.erase(it);
+                                continue;
+                            }
+
+                            ++it;
+                        }
+                    }
+
+                    ImGui::EndPopup();
+                }
 
                 ImGui::Spacing();
 

@@ -9,46 +9,11 @@ void init()
     getMenuInstance().keyBindManager.addBind(
         &getMenuInstance().opened,
         &getMenuInstance().newOpened,
+        &getMenuInstance().openedOldValue,
         BIND_TOGGLE,
         ITEM_UI_OPEN,
         VK_INSERT,
         {}
-    );
-
-    /*getMenuInstance().keyBindManager.addBind(
-        &getMenuInstance().testSlider,
-        &getMenuInstance().testSlider2,
-        BIND_HOLD,
-        ITEM_SLIDER,
-        'V',
-        "TestSlider 1"
-    );
-
-    getMenuInstance().keyBindManager.addBind(
-        &getMenuInstance().testSlider,
-        &getMenuInstance().testSlider3,
-        BIND_TOGGLE,
-        ITEM_SLIDER,
-        'N',
-        "TestSlider 1"
-    );*/
-
-    getMenuInstance().keyBindManager.addBind(
-        &getMenuInstance().testSliderNew,
-        &getMenuInstance().testSliderNew2,
-        BIND_HOLD,
-        ITEM_SLIDER,
-        'H',
-        "TestSlider 2"
-    );
-
-    getMenuInstance().keyBindManager.addBind(
-        &getMenuInstance().testSliderNew,
-        &getMenuInstance().testSliderNew3,
-        BIND_HOLD,
-        ITEM_SLIDER,
-        'H',
-        "TestSlider 2"
     );
 
     auto& bindList = getMenuInstance().keyBindManager.getBindList();

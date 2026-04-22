@@ -34,6 +34,36 @@ enum ItemType
 
 constexpr auto MAX_BINDS = 1000;
 
+template<typename T>
+struct ItemOldValue
+{
+    bool wrote{};
+    T value;
+
+    void setOldValue(T newValue)
+    {
+        if (!wrote)
+        {
+            value = newValue;
+            wrote = true;
+        }
+    }
+
+    void resetOldValue(T newValue)
+    {
+        if (wrote)
+        {
+            value = newValue;
+            wrote = false;
+        }
+    }
+
+    T getOldValue()
+    {
+        return value;
+    }
+};
+
 class IKeyBind
 {
 public:
@@ -70,9 +100,10 @@ template<typename T>
 class KeyBind : public IKeyBind
 {
 public:
-    KeyBind(T* item, T* bind, int type, int itemType, int key, std::string name)
+    KeyBind(T* item, T* bind, ItemOldValue<T>* oldValue, int type, int itemType, int key, std::string name)
         : itemPtr(item),
         bindItemPtr(bind),
+        oldValue(oldValue),
         type(type),
         itemType(itemType),
         key(key),
@@ -157,7 +188,7 @@ public:
 
     void setOldValue()
     {
-        oldValue = *itemPtr;
+        oldValue->setOldValue(*itemPtr);
     }
 
     void setNewValue()
@@ -170,7 +201,7 @@ public:
     {
         if (!wrote)
         {
-            oldValue = *itemPtr;
+            oldValue->setOldValue(*itemPtr);
             wrote = true;
         }
 
@@ -179,11 +210,11 @@ public:
 
     void setValueToOld()
     {
-        *itemPtr = oldValue;
+        *itemPtr = oldValue->getOldValue();
 
         if (wrote)
         {
-            oldValue = *itemPtr;
+            oldValue->resetOldValue(*itemPtr);
             wrote = false;
         }
     }
@@ -196,7 +227,7 @@ private:
 
     T* itemPtr = nullptr;
     T* bindItemPtr = nullptr;
-    T oldValue{};
+    ItemOldValue<T>* oldValue{};
     T newValue{};
 
     bool wrote = false;
@@ -236,11 +267,11 @@ public:
     }
 
     template<typename T>
-    void addBind(T* ptr, T* bindPtr, int type, int itemType, int key, std::string name)
+    void addBind(T* ptr, T* bindPtr, ItemOldValue<T>* oldValue, int type, int itemType, int key, std::string name)
     {
         std::string bindName = name + std::to_string(bindCounter++);
 
-        std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, type, itemType, key, bindName);
+        std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, oldValue, type, itemType, key, bindName);
         bind->setOldValue();
         keyBinds.emplace_back(bind);
     }
@@ -292,7 +323,7 @@ public:
             if (bindType != BIND_ALWAYS_ON && bindType != BIND_FORCE_OFF)
                 continue;
 
-            bind->setPressed(bindType == BIND_ALWAYS_ON ? true : false);
+            bind->setPressed(bindType == BIND_ALWAYS_ON);
 
             switch (bindType)
             {
@@ -434,15 +465,13 @@ struct sliderBindInt
 
 struct Menu
 {
+    ItemOldValue<bool> openedOldValue{};
     bool opened = false;
     bool newOpened = true;
 
+    ItemOldValue<int> testSliderOldValue{};
     int testSlider = 50;
     std::list<sliderBindInt> testSliderBinds{};
-
-    int testSliderNew = 50;
-    int testSliderNew2 = -100;
-    int testSliderNew3 = 100;
 
     KeyBindManager keyBindManager{};
 };

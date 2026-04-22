@@ -38,6 +38,7 @@ class IKeyBind
 {
 public:
     virtual int getType() = 0;
+    virtual int getOldType() = 0;
     virtual int getItemType() = 0;
     virtual int getKey() = 0;
 
@@ -47,6 +48,7 @@ public:
     virtual void setType(int type) = 0;
     virtual void setItemType(int type) = 0;
     virtual void setKey(int key) = 0;
+    virtual void updateOldType() = 0;
 
     virtual bool getPressed() = 0;
     virtual void setPressed(bool state) = 0;
@@ -81,6 +83,11 @@ public:
     int getType() override
     {
         return type;
+    }
+
+    int getOldType() override
+    {
+        return oldType;
     }
 
     int getItemType() override
@@ -126,6 +133,11 @@ public:
     void setKey(int other) override
     {
         key = other;
+    }
+
+    void updateOldType() override
+    {
+        oldType = type;
     }
 
     bool getPressed() override
@@ -178,6 +190,7 @@ public:
 
 private:
     int type = BIND_NONE;
+    int oldType = BIND_NONE;
     int itemType = ITEM_NONE;
     int key = VK_INSERT;
 
@@ -331,7 +344,8 @@ public:
     {
         for (auto bind : keyBinds)
         {
-            if (bind->getType() == BIND_ALWAYS_ON
+            if (bind->getType() == BIND_NONE
+                || bind->getType() == BIND_ALWAYS_ON
                 || bind->getType() == BIND_FORCE_OFF)
                 continue;
 
@@ -345,7 +359,29 @@ public:
                 continue;
             }
 
-            if (bind->getPressed())
+            if (bind->getOldType() != bind->getType())
+            {
+                if (bind->getPressed())
+                {
+                    bind->setPressed(false);
+                    bind->setValueToOld();
+                }
+
+                const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                if (foundBlock != uiBlock.end())
+                {
+                    uiBlock.erase(foundBlock);
+                }
+
+                bind->updateOldType();
+                continue;
+            }
+
+            bool activeButton = bind->getType() == BIND_RELEASE ?
+                !bind->getPressed()
+                : bind->getPressed();
+
+            if (activeButton)
             {
                 if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
                 {
@@ -391,6 +427,8 @@ public:
 struct sliderBindInt
 {
     int value{};
+    int bindMode{};
+    int bindKey{};
     std::string name{};
 };
 

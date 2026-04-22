@@ -24,6 +24,7 @@
     <ClCompile Include="hooks\hooks.cpp" />
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="gui\gui.cpp" />
+    <ClCompile Include="gui\binds\binds.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="threadpool\threadpool.h" />
@@ -44,5 +45,6 @@
     <ClInclude Include="hooks\hooks.h" />
     <ClInclude Include="render\render.h" />
     <ClInclude Include="gui\gui.h" />
+    <ClInclude Include="gui\binds\binds.h" />
   </ItemGroup>
 </Project>

@@ -24,7 +24,7 @@ LRESULT WINAPI Hooked_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 {
     if (wParam < VK_F13)
     {
-        gui::handleMainBinds(uMsg, wParam, lParam);
+        gui::binds::handleMainBinds(uMsg, wParam, lParam);
         getMenuInstance().keyBindManager.updateMainBindStates();
     }
 

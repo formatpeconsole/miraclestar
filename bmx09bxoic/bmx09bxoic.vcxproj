@@ -108,6 +108,7 @@
     <ClCompile Include="deps\imguiFramework\imgui_impl_win32.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_tables.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
+    <ClCompile Include="gui\binds\binds.cpp" />
     <ClCompile Include="gui\gui.cpp" />
     <ClCompile Include="hooks\hooks.cpp" />
     <ClCompile Include="in-game\sigs\sigs-handles.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="deps\imguiFramework\imstb_rectpack.h" />
     <ClInclude Include="deps\imguiFramework\imstb_textedit.h" />
     <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
+    <ClInclude Include="gui\binds\binds.h" />
     <ClInclude Include="gui\gui.h" />
     <ClInclude Include="hooks\hooks.h" />
     <ClInclude Include="in-game\sigs\sigs-handles.h" />

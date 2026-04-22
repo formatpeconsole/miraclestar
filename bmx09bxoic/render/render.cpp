@@ -420,7 +420,7 @@ void keyBind(const std::shared_ptr<IKeyBind> bind, int& key)
         {
             if (ImGui::IsKeyDown((ImGuiKey)i))
             {
-                key = ImGui_ImplWin32_ImGuiKeyToKeyEvent((ImGuiKey)i);
+                key = (int)ImGui_ImplWin32_ImGuiKeyToKeyEvent((ImGuiKey)i);
                 label = ImGui_ImplWin32_VKeyToString(key);
                 searchingKey = false;
                 bind->setKey(key);
@@ -585,7 +585,7 @@ void onRender(IDXGISwapChain* pSwapChain)
             }
             ImGui::End();
 
-            renderDebugBindsWindow();
+            binds::renderDebugBindsWindow();
         }
 
         ImGui::EndFrame();

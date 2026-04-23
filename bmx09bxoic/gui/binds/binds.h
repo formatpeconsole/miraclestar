@@ -354,18 +354,9 @@ public:
             const auto bindType = bind->getType();
             if (bind->getItemType() == ITEM_UI_OPEN)
                 continue;
-     
+
             if (bind->getOldType() != bind->getType())
             {
-                printf("%s | Old: %d -> New: %d \n", bind->getBindName().c_str(), bind->getOldType(), bind->getType());
-
-                int oldType = bind->getOldType();
-                if (oldType == BIND_ALWAYS_ON)
-                {
-                    bind->setPressed(false);
-                    bind->setValueToOld();
-                }
-
                 if (bind->getPressed())
                 {
                     if (bindType == BIND_RELEASE)
@@ -385,96 +376,42 @@ public:
             if (bindType == BIND_HOLD || bindType == BIND_TOGGLE)
                 continue;
 
-            if (bindType != BIND_RELEASE)
-            {
-                if (bindType == BIND_FORCE_OFF || bindType == BIND_ALWAYS_ON)
-                {
-                    if (bind->getOldPressed() != bind->getPressed())
-                        bind->setOldPressed(bind->getPressed());
-
-                    if (bindType == BIND_FORCE_OFF)
-                        bind->setBindToOff();
-                    else
-                        bind->setPressed(true);
-                }
-            }
-
             switch (bindType)
             {
             case BIND_ALWAYS_ON:
             {
-                if (bind->getPressed())
+                if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
                 {
-                    if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
-                    {
-                        uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
-                    }
-
-                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
-                    if (foundBlock != uiBlock.end())
-                    {
-                        bind->setValueToNew();
-                        if (!foundBlock->second.blocked)
-                        {
-                            foundBlock->second.blocked = true;
-                            foundBlock->second.bindName = bind->getBindName();
-                        }
-                    }
+                    uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
                 }
-                else
-                {
-                    bool erased = false;
-                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
-                    if (foundBlock != uiBlock.end())
-                    {
-                        if (foundBlock->second.blocked
-                            && foundBlock->second.bindType == bind->getType()
-                            && foundBlock->second.bindName == bind->getBindName())
-                        {
-                            if (foundBlock->second.activeKeyCount <= 0)
-                            {
-                                uiBlock.erase(foundBlock);
-                                erased = true;
-                            }
-                        }
-                    }
 
-                    if (erased)
-                        bind->setValueToOld();
+                const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                if (foundBlock != uiBlock.end())
+                {
+                    bind->setValueToNew();
+                    if (!foundBlock->second.blocked)
+                    {
+                        foundBlock->second.blocked = true;
+                        foundBlock->second.bindName = bind->getBindName();
+                    }
                 }
             }
             break;
             case BIND_FORCE_OFF:
             {
-                if (!bind->getPressed())
+                if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
                 {
-                    if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
-                    {
-                        uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
-                    }
-
-                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
-                    if (foundBlock != uiBlock.end())
-                    {
-                        if (!foundBlock->second.blocked)
-                        {
-                            bind->setValueToOld();
-                            foundBlock->second.blocked = true;
-                            foundBlock->second.bindName = bind->getBindName();
-                        }
-                    }
+                    uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
                 }
-                else
+
+                const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                if (foundBlock != uiBlock.end())
                 {
-                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
-                    if (foundBlock != uiBlock.end())
+                    if (!foundBlock->second.blocked)
                     {
-                        if (foundBlock->second.blocked
-                            && foundBlock->second.bindType == bind->getType()
-                            && foundBlock->second.bindName == bind->getBindName())
-                        {
-                            uiBlock.erase(foundBlock);
-                        }
+                        bind->setValueToOld();
+                        foundBlock->second.blocked = true;
+                        foundBlock->second.bindName = bind->getBindName();
                     }
                 }
             }
@@ -558,10 +495,7 @@ public:
     {
         for (auto bind : keyBinds)
         {
-            if (bind->getType() == BIND_NONE
-                || bind->getType() == BIND_ALWAYS_ON
-                || bind->getType() == BIND_FORCE_OFF
-                || bind->getType() == BIND_RELEASE)
+            if (bind->getType() == BIND_NONE)
                 continue;
 
             if (bind->getItemType() == ITEM_UI_OPEN)
@@ -576,13 +510,15 @@ public:
 
             if (bind->getOldType() != bind->getType())
             {
-                if (!bind->getPressed())
+                if (bind->getOldType() == BIND_ALWAYS_ON)
                 {
-                    if (bind->getOldPressed())
-                        bind->setPressed(false);
+                    if (bind->getType() == BIND_TOGGLE
+                        || bind->getType() == BIND_HOLD)
+                    {
+                        if (!bind->getPressed())
+                            bind->setValueToOld();
+                    }
                 }
-
-                bind->setValueToOld();
 
                 const auto foundBlock = uiBlock.find(bind->getItemPtr());
                 if (foundBlock != uiBlock.end())
@@ -596,6 +532,11 @@ public:
 
             if (bind->getOldPressed() != bind->getPressed())
                 bind->setOldPressed(bind->getPressed());
+
+            if (bind->getType() == BIND_ALWAYS_ON
+                || bind->getType() == BIND_FORCE_OFF
+                || bind->getType() == BIND_RELEASE)
+                continue;
 
             if (bind->getPressed())
             {

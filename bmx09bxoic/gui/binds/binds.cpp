@@ -48,7 +48,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
         auto bindToUpdate = (*correctBind);
         const auto bindType = bindToUpdate->getType();
 
-        if (bindType != BIND_ALWAYS_ON && bindType != BIND_FORCE_OFF)
+     //   if (bindType != BIND_ALWAYS_ON && bindType != BIND_FORCE_OFF)
         {
             switch (bindType)
             {
@@ -84,8 +84,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 if (uMsg == WM_KEYDOWN)
                 {
-                    bool newState = !((lParam >> 30) & 1);
-                    if (newState)
+                    if (!bindToUpdate->getPressed())
                     {
                         bindManager.onKeyDown(bindToUpdate);
                         bindToUpdate->setPressed(true);
@@ -93,8 +92,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 }
                 else if (uMsg == WM_KEYUP)
                 {
-                    bool newState = ((lParam >> 30) & 1);
-                    if (newState)
+                    if (bindToUpdate->getPressed())
                     {
                         bindManager.onKeyUp(bindToUpdate);
                         bindToUpdate->setPressed(false);
@@ -138,7 +136,14 @@ void renderDebugBindsWindow()
             if (bind->getItemType() == ITEM_UI_OPEN)
                 continue;
 
-            bool validState = bind->getType() == BIND_RELEASE ? !bind->getPressed() : bind->getPressed();
+            bool validState = false;
+            if (bind->getType() == BIND_ALWAYS_ON || bind->getType() == BIND_FORCE_OFF)
+            {
+                validState = true;
+            }
+            else
+                validState = bind->getType() == BIND_RELEASE ? !bind->getPressed() : bind->getPressed();
+
             if (validState)
             {
                 ImGui::Text("[+] %s -> %s | %s", bind->getBindName().c_str(), bind->getBindValue().c_str(), getBindType(bind->getType()).c_str());

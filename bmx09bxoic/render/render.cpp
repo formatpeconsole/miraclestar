@@ -41,6 +41,11 @@ void init(IDXGISwapChain* pSwapChain)
 
     ImGui_ImplDX11_InvalidateDeviceObjects();
     ImGui_ImplDX11_CreateDeviceObjects();
+
+    RegisterHotKey(getRenderInfoInstance().cs2Window, 100, 0, VK_MENU);
+    RegisterHotKey(getRenderInfoInstance().cs2Window, 100, 0, VK_LMENU);
+    RegisterHotKey(getRenderInfoInstance().cs2Window, 100, 0, VK_RMENU);
+
     getRenderInfoInstance().init = true;
 }
 

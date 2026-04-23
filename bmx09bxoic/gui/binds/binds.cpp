@@ -34,13 +34,75 @@ void destroyBinds()
     getMenuInstance().keyBindManager.destroy();
 }
 
+bool isMouseDown(UINT uMsg)
+{
+    switch (uMsg)
+    {
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDBLCLK:
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONDBLCLK:
+    case WM_MBUTTONDOWN:
+    case WM_MBUTTONDBLCLK:
+    case WM_XBUTTONDOWN:
+    case WM_XBUTTONDBLCLK:
+        return true;
+    }
+    return false;
+}
+
+bool isMouseUp(UINT uMsg)
+{
+    switch (uMsg)
+    {
+    case WM_LBUTTONUP:
+    case WM_RBUTTONUP:
+    case WM_MBUTTONUP:
+    case WM_XBUTTONUP:
+        return true;
+    }
+    return false;
+}
+
+bool isKeyDown(UINT uMsg)
+{
+    if (uMsg == WM_KEYDOWN 
+        || uMsg == WM_SYSKEYDOWN
+        || isMouseDown(uMsg))
+        return true;
+
+    return false;
+}
+
+bool isKeyUp(UINT uMsg)
+{
+    if (uMsg == WM_KEYUP 
+        || uMsg == WM_SYSKEYUP
+        || isMouseUp(uMsg))
+        return true;
+
+    return false;
+}
+
+int getButtonKey(WPARAM wParam)
+{
+    UINT button = GET_XBUTTON_WPARAM(wParam);
+    if (button == XBUTTON1)
+        return VK_XBUTTON1;
+    else if (button == XBUTTON2)
+        return VK_XBUTTON2;
+
+    return wParam;
+}
+
 void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     auto& bindManager = getMenuInstance().keyBindManager;
     auto& bindList = bindManager.getBindList();
-    const auto correctBind = std::find_if(bindList.begin(), bindList.end(), [wParam](const std::shared_ptr<IKeyBind>& keyBind)
+    auto buttonKey = getButtonKey(wParam);
+    const auto correctBind = std::find_if(bindList.begin(), bindList.end(), [buttonKey](const std::shared_ptr<IKeyBind>& keyBind)
         {
-            return keyBind->getKey() == wParam;
+            return keyBind->getKey() == buttonKey;
         });
 
     if (correctBind != bindList.end())
@@ -60,7 +122,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
                 // update ui pressed state only when you didn't press it before
                 // (allows to bypass spamming value when user hold key)
-                if (uMsg == WM_KEYDOWN)
+                if (isKeyDown(uMsg))
                 {
                     bool newState = !((lParam >> 30) & 1);
                     if (newState)
@@ -73,7 +135,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                         bindToUpdate->setPressed(!bindToUpdate->getPressed());
                     }
                 }
-                else if (uMsg == WM_KEYUP)
+                else if (isKeyUp(uMsg))
                 {
                     bindManager.onKeyUp(bindToUpdate);
                 }
@@ -82,7 +144,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
             case BIND_HOLD:
             case BIND_RELEASE:
             {
-                if (uMsg == WM_KEYDOWN)
+                if (isKeyDown(uMsg))
                 {
                     if (!bindToUpdate->getPressed())
                     {
@@ -90,7 +152,7 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
                         bindToUpdate->setPressed(true);
                     }
                 }
-                else if (uMsg == WM_KEYUP)
+                else if (isKeyUp(uMsg))
                 {
                     if (bindToUpdate->getPressed())
                     {
@@ -211,13 +273,13 @@ WPARAM ImGui_ImplWin32_ImGuiKeyToKeyEvent(ImGuiKey imgui_key)
     case ImGuiKey_KeypadMultiply: return VK_MULTIPLY;
     case ImGuiKey_KeypadSubtract: return VK_SUBTRACT;
     case ImGuiKey_KeypadAdd: return VK_ADD;
-    case ImGuiKey_LeftShift: return VK_LSHIFT;
-    case ImGuiKey_LeftCtrl: return VK_LCONTROL;
-    case ImGuiKey_LeftAlt: return VK_LMENU;
+    case ImGuiKey_LeftShift: return VK_SHIFT;
+    case ImGuiKey_LeftCtrl: return VK_CONTROL;
+    case ImGuiKey_LeftAlt: return VK_MENU;
     case ImGuiKey_LeftSuper: return VK_LWIN;
-    case ImGuiKey_RightShift: return VK_RSHIFT;
-    case ImGuiKey_RightCtrl: return VK_RCONTROL;
-    case ImGuiKey_RightAlt: return VK_RMENU;
+    case ImGuiKey_RightShift: return VK_SHIFT;
+    case ImGuiKey_RightCtrl: return VK_CONTROL;
+    case ImGuiKey_RightAlt: return VK_MENU;
     case ImGuiKey_RightSuper: return VK_RWIN;
     case ImGuiKey_Menu: return VK_APPS;
     case ImGuiKey_0: return '0';
@@ -493,18 +555,53 @@ void keyBind(const std::shared_ptr<IKeyBind> bind, int& key, bool& foundKey)
         label = "...";
         ImGui::SmallButton(label.c_str());
 
+        if (ImGui::IsKeyDown(ImGuiKey_Escape))
+        {
+            key = -1;
+            label = "None";
+            foundKey = false;
+            return;
+        }
+
+        bool keyFound = false;
+        for (int i = ImGuiMouseButton_Left; i < ImGuiMouseButton_COUNT; i++)
+        {
+            if (ImGui::GetIO().MouseDown[i])
+            {
+                switch (i)
+                {
+                case 0:
+                    key = VK_LBUTTON;
+                    break;
+                case 1:
+                    key = VK_RBUTTON;
+                    break;
+                case 2:
+                    key = VK_MBUTTON;
+                    break;
+                case 3:
+                    key = VK_XBUTTON1;
+                    break;
+                case 4:
+                    key = VK_XBUTTON2;
+                    break;
+                }
+
+                label = ImGui_ImplWin32_VKeyToString(key);
+                foundKey = false;
+                bind->setKey(key);
+                keyFound = true;
+                break;
+            }
+        }
+
+        if (keyFound)
+            return;
+
         for (int i = ImGuiKey_NamedKey_BEGIN; i < ImGuiKey_NamedKey_END; ++i)
         {
             if (ImGui::IsKeyDown((ImGuiKey)i))
             {
-                if (i == ImGuiKey_Escape)
-                {
-                    key = -1;
-                    label = "None";
-                    foundKey = false;
-                    break;
-                }
-
                 key = (int)ImGui_ImplWin32_ImGuiKeyToKeyEvent((ImGuiKey)i);
                 label = ImGui_ImplWin32_VKeyToString(key);
                 foundKey = false;

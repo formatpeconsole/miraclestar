@@ -95,11 +95,51 @@ int getButtonKey(WPARAM wParam)
     return wParam;
 }
 
+std::string getButtonMessage(UINT uMsg)
+{
+    if (uMsg == WM_LBUTTONDOWN)
+        return "Mouse 1 Down";
+
+    if (uMsg == WM_LBUTTONUP)
+        return "Mouse 1 Up";
+
+    return {};
+}
+
+int getKeyByMessage(UINT uMsg, WPARAM wParam)
+{
+    switch (uMsg)
+    {
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDBLCLK:
+        return VK_LBUTTON;
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONDBLCLK:
+        return VK_RBUTTON;
+    case WM_MBUTTONDOWN:
+    case WM_MBUTTONDBLCLK:
+        return VK_MBUTTON;
+    case WM_XBUTTONDOWN:
+    case WM_XBUTTONDBLCLK:
+        return wParam;
+    case WM_LBUTTONUP:
+        return VK_LBUTTON;
+    case WM_RBUTTONUP:
+        return VK_RBUTTON;
+    case WM_MBUTTONUP:
+        return VK_MBUTTON;
+    }
+    return wParam;
+}
+
 void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     auto& bindManager = getMenuInstance().keyBindManager;
     auto& bindList = bindManager.getBindList();
-    auto buttonKey = getButtonKey(wParam);
+    auto buttonKey = getButtonKey(getKeyByMessage(uMsg, wParam));
+   // auto message = getButtonMessage(uMsg);
+   // printf("Message: %s | Key: %s \n", message.c_str(), ImGui_ImplWin32_VKeyToString(buttonKey).c_str());
+
     const auto correctBind = std::find_if(bindList.begin(), bindList.end(), [buttonKey](const std::shared_ptr<IKeyBind>& keyBind)
         {
             return keyBind->getKey() == buttonKey;
@@ -533,7 +573,7 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
     case 'Z': return "Z";
 
     default:
-        return {};
+        return std::to_string(wParam);
         break;
     }
 }

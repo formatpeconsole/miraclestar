@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <memory>
 #include <vector>
 #include <string>
@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <unordered_map>
 #include <Windows.h>
+
+#include "../../render/render.h"
 
 namespace gui::binds
 {
@@ -79,9 +81,7 @@ public:
     virtual void updateOldType() = 0;
 
     virtual bool getPressed() = 0;
-    virtual bool getOldPressed() = 0;
     virtual void setPressed(bool state) = 0;
-    virtual void setOldPressed(bool state) = 0;
 
     virtual void setOldValue() = 0;
     virtual void setNewValue() = 0;
@@ -183,16 +183,6 @@ public:
         pressed = state;
     }
 
-    bool getOldPressed() override
-    {
-        return oldPressed;
-    }
-
-    void setOldPressed(bool state) override
-    {
-        oldPressed = state;
-    }
-
     bool isValueSet() override
     {
         return wrote;
@@ -262,7 +252,6 @@ private:
 
     bool wrote = false;
     bool pressed = false;
-    bool oldPressed = false;
     bool setOff = false;
 
     std::string name{};
@@ -349,7 +338,13 @@ public:
 
     void updateOtherBindStates()
     {
-        for (auto bind : keyBinds)
+        bindList sortedBinds = keyBinds;
+        std::stable_sort(sortedBinds.begin(), sortedBinds.end(),
+            [](const auto& a, const auto& b) {
+                return a->getPressed() > b->getPressed();
+            });
+
+        for (auto bind : sortedBinds)
         {
             const auto bindType = bind->getType();
             if (bind->getItemType() == ITEM_UI_OPEN)
@@ -359,7 +354,7 @@ public:
             {
                 if (bind->getPressed())
                 {
-                    if (bindType == BIND_RELEASE)
+                    if (bind->getType() == BIND_RELEASE)
                         bind->setValueToOld();
                 }
 
@@ -425,12 +420,16 @@ public:
                         uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
                     }
 
+                    bool canHandleBlock = false;
                     const auto foundBlock = uiBlock.find(bind->getItemPtr());
                     if (foundBlock != uiBlock.end())
+                        canHandleBlock = true;
+
+                    if (canHandleBlock)
                     {
-                        bind->setValueToNew();
                         if (!foundBlock->second.blocked)
                         {
+                            bind->setValueToNew();
                             foundBlock->second.blocked = true;
                             foundBlock->second.bindName = bind->getBindName();
                         }
@@ -444,13 +443,10 @@ public:
                     {
                         if (foundBlock->second.blocked
                             && foundBlock->second.bindType == bind->getType()
-                            && foundBlock->second.bindName == bind->getBindName())
+                            && !foundBlock->second.bindName.compare(bind->getBindName()))
                         {
-                            if (foundBlock->second.activeKeyCount > 0)
-                            {
-                                uiBlock.erase(foundBlock);
-                                erased = true;
-                            }
+                            uiBlock.erase(foundBlock);
+                            erased = true;
                         }
                     }
 
@@ -493,7 +489,13 @@ public:
 
     void updateMainBindStates()
     {
-        for (auto bind : keyBinds)
+        bindList sortedBinds = keyBinds;
+        std::stable_sort(sortedBinds.begin(), sortedBinds.end(),
+            [](const auto& a, const auto& b) {
+                return a->getPressed() < b->getPressed();
+            });
+
+        for (auto bind : sortedBinds)
         {
             if (bind->getType() == BIND_NONE)
                 continue;
@@ -510,15 +512,8 @@ public:
 
             if (bind->getOldType() != bind->getType())
             {
-                if (bind->getOldType() == BIND_ALWAYS_ON)
-                {
-                    if (bind->getType() == BIND_TOGGLE
-                        || bind->getType() == BIND_HOLD)
-                    {
-                        if (!bind->getPressed())
-                            bind->setValueToOld();
-                    }
-                }
+                bind->setValueToOld();
+                bind->setPressed(false);
 
                 const auto foundBlock = uiBlock.find(bind->getItemPtr());
                 if (foundBlock != uiBlock.end())
@@ -529,9 +524,6 @@ public:
                 bind->updateOldType();
                 continue;
             }
-
-            if (bind->getOldPressed() != bind->getPressed())
-                bind->setOldPressed(bind->getPressed());
 
             if (bind->getType() == BIND_ALWAYS_ON
                 || bind->getType() == BIND_FORCE_OFF
@@ -545,12 +537,18 @@ public:
                     uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
                 }
 
+                bool canHandleBlock = false;
                 const auto foundBlock = uiBlock.find(bind->getItemPtr());
                 if (foundBlock != uiBlock.end())
+                    canHandleBlock = true;
+
+                if (canHandleBlock && !foundBlock->second.blocked)
+                    bind->setValueToNew();
+
+                if (canHandleBlock)
                 {
                     if (!foundBlock->second.blocked)
                     {
-                        bind->setValueToNew();
                         foundBlock->second.blocked = true;
                         foundBlock->second.bindName = bind->getBindName();
                     }
@@ -564,7 +562,7 @@ public:
                 {
                     if (foundBlock->second.blocked
                         && foundBlock->second.bindType == bind->getType()
-                        && foundBlock->second.bindName == bind->getBindName())
+                        && !foundBlock->second.bindName.compare(bind->getBindName()))
                     {
                         if (foundBlock->second.activeKeyCount <= 0)
                         {
@@ -585,4 +583,9 @@ void initBinds();
 void destroyBinds();
 void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam);
 void renderDebugBindsWindow();
+
+void addNewbind(int& counter);
+WPARAM ImGui_ImplWin32_ImGuiKeyToKeyEvent(ImGuiKey imgui_key);
+std::string ImGui_ImplWin32_VKeyToString(int wParam);
+void keyBind(const std::shared_ptr<IKeyBind> bind, int& key, bool& foundKey);
 }

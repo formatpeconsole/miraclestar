@@ -79,13 +79,17 @@ public:
     virtual void updateOldType() = 0;
 
     virtual bool getPressed() = 0;
+    virtual bool getOldPressed() = 0;
     virtual void setPressed(bool state) = 0;
+    virtual void setOldPressed(bool state) = 0;
 
     virtual void setOldValue() = 0;
     virtual void setNewValue() = 0;
 
     virtual void setValueToNew() = 0;
     virtual void setValueToOld() = 0;
+    virtual void setBindToOff() = 0;
+    virtual void setBindToOn() = 0;
 
     virtual bool isValueSet() = 0;
     virtual std::string getBindName() = 0;
@@ -179,23 +183,33 @@ public:
         pressed = state;
     }
 
+    bool getOldPressed() override
+    {
+        return oldPressed;
+    }
+
+    void setOldPressed(bool state) override
+    {
+        oldPressed = state;
+    }
+
     bool isValueSet() override
     {
         return wrote;
     }
 
-    void setOldValue()
+    void setOldValue() override
     {
         oldValue->setOldValue(*itemPtr);
     }
 
-    void setNewValue()
+    void setNewValue() override
     {
         newValue = *bindItemPtr;
         bindValue = std::to_string(newValue);
     }
 
-    void setValueToNew()
+    void setValueToNew() override
     {
         if (!wrote)
         {
@@ -206,7 +220,7 @@ public:
         *itemPtr = newValue;
     }
 
-    void setValueToOld()
+    void setValueToOld() override
     {
         *itemPtr = oldValue->getOldValue();
 
@@ -214,6 +228,24 @@ public:
         {
             oldValue->resetOldValue(*itemPtr);
             wrote = false;
+        }
+    }
+
+    void setBindToOff() override
+    {
+        if (!setOff)
+        {
+            setPressed(false);
+            setOff = true;
+        }
+    }
+
+    void setBindToOn() override
+    {
+        if (!setOff)
+        {
+            setPressed(true);
+            setOff = true;
         }
     }
 
@@ -230,6 +262,8 @@ private:
 
     bool wrote = false;
     bool pressed = false;
+    bool oldPressed = false;
+    bool setOff = false;
 
     std::string name{};
     std::string bindValue{};
@@ -318,27 +352,131 @@ public:
         for (auto bind : keyBinds)
         {
             const auto bindType = bind->getType();
+            if (bind->getItemType() == ITEM_UI_OPEN)
+                continue;
+     
+            if (bind->getOldType() != bind->getType())
+            {
+                printf("%s | Old: %d -> New: %d \n", bind->getBindName().c_str(), bind->getOldType(), bind->getType());
+
+                int oldType = bind->getOldType();
+                if (oldType == BIND_ALWAYS_ON)
+                {
+                    bind->setPressed(false);
+                    bind->setValueToOld();
+                }
+
+                if (bind->getPressed())
+                {
+                    if (bindType == BIND_RELEASE)
+                        bind->setValueToOld();
+                }
+
+                const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                if (foundBlock != uiBlock.end())
+                {
+                    uiBlock.erase(foundBlock);
+                }
+
+                bind->updateOldType();
+                continue;
+            }
+
             if (bindType == BIND_HOLD || bindType == BIND_TOGGLE)
                 continue;
 
-            if (bind->getItemType() == ITEM_UI_OPEN)
-                continue;
-
             if (bindType != BIND_RELEASE)
-                bind->setPressed(bindType == BIND_ALWAYS_ON);
+            {
+                if (bindType == BIND_FORCE_OFF || bindType == BIND_ALWAYS_ON)
+                {
+                    if (bind->getOldPressed() != bind->getPressed())
+                        bind->setOldPressed(bind->getPressed());
+
+                    if (bindType == BIND_FORCE_OFF)
+                        bind->setBindToOff();
+                    else
+                        bind->setPressed(true);
+                }
+            }
 
             switch (bindType)
             {
             case BIND_ALWAYS_ON:
             {
                 if (bind->getPressed())
-                    bind->setValueToNew();
+                {
+                    if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
+                    {
+                        uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
+                    }
+
+                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                    if (foundBlock != uiBlock.end())
+                    {
+                        bind->setValueToNew();
+                        if (!foundBlock->second.blocked)
+                        {
+                            foundBlock->second.blocked = true;
+                            foundBlock->second.bindName = bind->getBindName();
+                        }
+                    }
+                }
+                else
+                {
+                    bool erased = false;
+                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                    if (foundBlock != uiBlock.end())
+                    {
+                        if (foundBlock->second.blocked
+                            && foundBlock->second.bindType == bind->getType()
+                            && foundBlock->second.bindName == bind->getBindName())
+                        {
+                            if (foundBlock->second.activeKeyCount <= 0)
+                            {
+                                uiBlock.erase(foundBlock);
+                                erased = true;
+                            }
+                        }
+                    }
+
+                    if (erased)
+                        bind->setValueToOld();
+                }
             }
             break;
             case BIND_FORCE_OFF:
             {
                 if (!bind->getPressed())
-                    bind->setValueToOld();
+                {
+                    if (uiBlock.find(bind->getItemPtr()) == uiBlock.end())
+                    {
+                        uiBlock.insert(std::make_pair(bind->getItemPtr(), UiBlock{ false, bind->getType(), {} }));
+                    }
+
+                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                    if (foundBlock != uiBlock.end())
+                    {
+                        if (!foundBlock->second.blocked)
+                        {
+                            bind->setValueToOld();
+                            foundBlock->second.blocked = true;
+                            foundBlock->second.bindName = bind->getBindName();
+                        }
+                    }
+                }
+                else
+                {
+                    const auto foundBlock = uiBlock.find(bind->getItemPtr());
+                    if (foundBlock != uiBlock.end())
+                    {
+                        if (foundBlock->second.blocked
+                            && foundBlock->second.bindType == bind->getType()
+                            && foundBlock->second.bindName == bind->getBindName())
+                        {
+                            uiBlock.erase(foundBlock);
+                        }
+                    }
+                }
             }
             break;
             case BIND_RELEASE:
@@ -438,11 +576,13 @@ public:
 
             if (bind->getOldType() != bind->getType())
             {
-                if (bind->getPressed())
+                if (!bind->getPressed())
                 {
-                    bind->setPressed(false);
-                    bind->setValueToOld();
+                    if (bind->getOldPressed())
+                        bind->setPressed(false);
                 }
+
+                bind->setValueToOld();
 
                 const auto foundBlock = uiBlock.find(bind->getItemPtr());
                 if (foundBlock != uiBlock.end())
@@ -453,6 +593,9 @@ public:
                 bind->updateOldType();
                 continue;
             }
+
+            if (bind->getOldPressed() != bind->getPressed())
+                bind->setOldPressed(bind->getPressed());
 
             if (bind->getPressed())
             {

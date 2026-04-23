@@ -16,10 +16,11 @@ using namespace binds;
 
 struct sliderBindInt
 {
-    int value{};
-    int bindMode{};
-    int bindKey{};
+    int value = 0;
+    int bindMode = 0;
+    int bindKey = 0;
     std::string name{};
+    bool foundKey = false;
 };
 
 struct Menu

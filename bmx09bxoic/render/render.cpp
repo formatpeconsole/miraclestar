@@ -399,16 +399,16 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
     }
 }
 
-void keyBind(const std::shared_ptr<IKeyBind> bind, int& key)
+void keyBind(const std::shared_ptr<IKeyBind> bind, int& key, bool& foundKey)
 {
     static std::string label = "Press any key";
     static bool searchingKey = false;
 
-    if (!searchingKey)
+    if (!foundKey)
     {
         if (ImGui::SmallButton(label.c_str()))
         {
-            searchingKey = true;
+            foundKey = true;
         }
     }
     else
@@ -420,9 +420,17 @@ void keyBind(const std::shared_ptr<IKeyBind> bind, int& key)
         {
             if (ImGui::IsKeyDown((ImGuiKey)i))
             {
+                if (i == ImGuiKey_Escape)
+                {
+                    key = -1;
+                    label = "Press any key";
+                    foundKey = false;
+                    break;
+                }
+
                 key = (int)ImGui_ImplWin32_ImGuiKeyToKeyEvent((ImGuiKey)i);
                 label = ImGui_ImplWin32_VKeyToString(key);
-                searchingKey = false;
+                foundKey = false;
                 bind->setKey(key);
                 break;
             }
@@ -574,7 +582,7 @@ void onRender(IDXGISwapChain* pSwapChain)
 
                             ImGui::Text("Current Key");
                             ImGui::SameLine();
-                            keyBind(currentBind, selectedBind.value()->bindKey);
+                            keyBind(currentBind, selectedBind.value()->bindKey, selectedBind.value()->foundKey);
                         }
 
                         ImGui::SliderInt(valueName.c_str(), &selectedBind.value()->value, -100, 100);

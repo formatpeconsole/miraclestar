@@ -28,7 +28,8 @@ struct Menu
             .value = 0,
             .binds = {},
             .preview = {},
-            .name = "Hit Chance"
+            .name = "Hit Chance",
+            .itemType = ITEM_SLIDER_INT,
         },
         .min = 0,
         .max = 100,
@@ -40,7 +41,8 @@ struct Menu
             .value = 0,
             .binds = {},
             .preview = {},
-            .name = "Minimum Damage"
+            .name = "Minimum Damage",
+            .itemType = ITEM_SLIDER_INT,
         },
         .min = 0,
         .max = 100,

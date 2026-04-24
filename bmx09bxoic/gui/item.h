@@ -44,6 +44,7 @@ struct Item
 
     BindPreview<T> preview{};
     std::string name{};
+    int itemType{};
 };
 
 template<typename T>

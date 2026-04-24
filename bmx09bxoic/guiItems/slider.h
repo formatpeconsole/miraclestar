@@ -12,6 +12,83 @@
 
 namespace gui::items::slider
 {
+inline std::string getItemType(int type)
+{
+    switch (type)
+    {
+    case ITEM_CHECKBOX:
+        return "Checkbox";
+    case ITEM_SLIDER_INT:
+        return "Slider<int>";
+    case ITEM_SLIDER_FLOAT:
+        return "Slider<float>";
+    case ITEM_COMBOBOX:
+        return "ComboBox";
+    case ITEM_MULTICOMBOBOX:
+        return "MultiComboBox";
+    case ITEM_COLOR:
+        return "Color";
+    default:
+        return "";
+    }
+}
+
+inline std::string getBindMode(int mode)
+{
+    switch (mode)
+    {
+    case BIND_ALWAYS_ON:
+        return "Always On";
+    case BIND_HOLD:
+        return "Hold";
+    case BIND_TOGGLE:
+        return "Toggle";
+    case BIND_RELEASE:
+        return "Release";
+    case BIND_FORCE_OFF:
+        return "Force Off";
+    default:
+        return "";
+    }
+}
+
+inline void printAllItems()
+{
+    auto& instance = getMenuInstance();
+
+    printf("Slider<int> hitChance \n");
+    printf("Main value: %d \n", instance.hitChance.item.value);
+    printf("Item type: %s \n", getItemType(instance.hitChance.item.itemType).c_str());
+
+    printf("Binds: \n");
+
+    for (auto& i : instance.hitChance.item.binds)
+    {
+        printf("    Bind name: %s \n", i.name.c_str());
+        printf("    Value: %d \n", i.value);
+        printf("    Bind mode: %s \n", getBindMode(i.bindMode).c_str());
+        printf("    Bind key: %d \n", i.bindKey);
+        printf("\n");
+    }
+
+    printf("\n");
+    printf("\n");
+
+    printf("Slider<int> minDamage \n");
+    printf("Main value: %d \n", instance.minDamage.item.value);
+    printf("Item type: %s \n", getItemType(instance.minDamage.item.itemType).c_str());
+
+    printf("Binds: \n");
+
+    for (auto& i : instance.minDamage.item.binds)
+    {
+        printf("    Bind name: %s \n", i.name.c_str());
+        printf("    Value: %d \n", i.value);
+        printf("    Bind mode: %s \n", getBindMode(i.bindMode).c_str());
+        printf("    Bind key: %d \n", i.bindKey);
+    }
+}
+
 template<typename T>
 inline void addSliderBind(Slider<T>& slider, int& counter)
 {
@@ -24,10 +101,12 @@ inline void addSliderBind(Slider<T>& slider, int& counter)
         &newBind.value,
         &item.oldValue,
         BIND_NONE,
-        ITEM_SLIDER,
+        item.itemType,
         0,
         newBind.name
     );
+
+    printAllItems();
 }
 
 template<typename T>

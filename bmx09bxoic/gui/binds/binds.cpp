@@ -95,17 +95,6 @@ int getButtonKey(WPARAM wParam)
     return wParam;
 }
 
-std::string getButtonMessage(UINT uMsg)
-{
-    if (uMsg == WM_LBUTTONDOWN)
-        return "Mouse 1 Down";
-
-    if (uMsg == WM_LBUTTONUP)
-        return "Mouse 1 Up";
-
-    return {};
-}
-
 int getKeyByMessage(UINT uMsg, WPARAM wParam)
 {
     switch (uMsg)
@@ -137,8 +126,6 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
     auto& bindManager = getMenuInstance().keyBindManager;
     auto& bindList = bindManager.getBindList();
     auto buttonKey = getButtonKey(getKeyByMessage(uMsg, wParam));
-   // auto message = getButtonMessage(uMsg);
-   // printf("Message: %s | Key: %s \n", message.c_str(), ImGui_ImplWin32_VKeyToString(buttonKey).c_str());
 
     const auto correctBind = std::find_if(bindList.begin(), bindList.end(), [buttonKey](const std::shared_ptr<IKeyBind>& keyBind)
         {
@@ -227,46 +214,7 @@ std::string getBindType(int type)
 
 void renderDebugBindsWindow()
 {
-    auto& bindList = getMenuInstance().keyBindManager.getBindList();
-    ImGui::Begin("bind debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    {
-        ImGui::Text("binds: ");
-
-        int counter = 0;
-        for (auto bind : bindList)
-        {
-            if (bind->getItemType() == ITEM_UI_OPEN)
-                continue;
-
-            bool validState = (bind->getType() == BIND_ALWAYS_ON || bind->getType() == BIND_FORCE_OFF) ? true :
-                bind->getType() == BIND_RELEASE ? !bind->getPressed() : bind->getPressed();
-
-            if (validState)
-            {
-                ImGui::Text("[+] %s -> %s | %s", bind->getBindName().c_str(), bind->getBindValue().c_str(), getBindType(bind->getType()).c_str());
-            }
-
-            ++counter;
-        }
-    }
-    ImGui::End();
-}
-
-
-void addNewbind(int& counter)
-{
-    auto& newBind = getMenuInstance().testSliderBinds.emplace_back();
-    newBind.name = "Test Slider " + std::to_string(counter++);
-
-    getMenuInstance().keyBindManager.addBind(
-        &getMenuInstance().testSlider,
-        &newBind.value,
-        &getMenuInstance().testSliderOldValue,
-        BIND_TOGGLE,
-        ITEM_SLIDER,
-        0,
-        newBind.name
-    );
+  
 }
 
 WPARAM ImGui_ImplWin32_ImGuiKeyToKeyEvent(ImGuiKey imgui_key)
@@ -575,80 +523,6 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
     default:
         return std::to_string(wParam);
         break;
-    }
-}
-
-void keyBind(const std::shared_ptr<IKeyBind> bind, int& key, bool& foundKey)
-{
-    static std::string label = "Press any key";
-    static bool searchingKey = false;
-
-    if (!foundKey)
-    {
-        if (ImGui::SmallButton(label.c_str()))
-        {
-            foundKey = true;
-        }
-    }
-    else
-    {
-        label = "...";
-        ImGui::SmallButton(label.c_str());
-
-        if (ImGui::IsKeyDown(ImGuiKey_Escape))
-        {
-            key = -1;
-            label = "None";
-            foundKey = false;
-            return;
-        }
-
-        bool keyFound = false;
-        for (int i = ImGuiMouseButton_Left; i < ImGuiMouseButton_COUNT; i++)
-        {
-            if (ImGui::GetIO().MouseDown[i])
-            {
-                switch (i)
-                {
-                case 0:
-                    key = VK_LBUTTON;
-                    break;
-                case 1:
-                    key = VK_RBUTTON;
-                    break;
-                case 2:
-                    key = VK_MBUTTON;
-                    break;
-                case 3:
-                    key = VK_XBUTTON1;
-                    break;
-                case 4:
-                    key = VK_XBUTTON2;
-                    break;
-                }
-
-                label = ImGui_ImplWin32_VKeyToString(key);
-                foundKey = false;
-                bind->setKey(key);
-                keyFound = true;
-                break;
-            }
-        }
-
-        if (keyFound)
-            return;
-
-        for (int i = ImGuiKey_NamedKey_BEGIN; i < ImGuiKey_NamedKey_END; ++i)
-        {
-            if (ImGui::IsKeyDown((ImGuiKey)i))
-            {
-                key = (int)ImGui_ImplWin32_ImGuiKeyToKeyEvent((ImGuiKey)i);
-                label = ImGui_ImplWin32_VKeyToString(key);
-                foundKey = false;
-                bind->setKey(key);
-                break;
-            }
-        }
     }
 }
 }

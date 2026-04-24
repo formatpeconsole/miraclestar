@@ -46,5 +46,8 @@
     <ClInclude Include="render\render.h" />
     <ClInclude Include="gui\gui.h" />
     <ClInclude Include="gui\binds\binds.h" />
+    <ClInclude Include="guiItems\slider.h" />
+    <ClInclude Include="guiItems\items.h" />
+    <ClInclude Include="gui\item.h" />
   </ItemGroup>
 </Project>

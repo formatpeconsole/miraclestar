@@ -2,6 +2,7 @@
 
 #include "../hooks/hooks.h"
 #include "../gui/gui.h"
+#include "../guiItems/items.h"
 
 namespace render
 {
@@ -77,8 +78,6 @@ void onResize()
     destroy();
 }
 
-decltype(&gui::binds::addNewbind) bindCallback = addNewbind;
-
 void onRender(IDXGISwapChain* pSwapChain)
 {
     if (!getRenderInfoInstance().init)
@@ -118,119 +117,9 @@ void onRender(IDXGISwapChain* pSwapChain)
             ImGui::SetNextWindowSize(ImVec2(780, 650));
             ImGui::Begin("hi", &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
             {
-                ImGui::SliderInt("Current", &getMenuInstance().testSlider, -100, 100);
-                ImGui::SameLine();
-                if (ImGui::SmallButton("..."))
-                {
-                    ImGui::OpenPopup("bind_popup");
-                }
-
-                static int counter = 0;
-                if (ImGui::BeginPopup("bind_popup"))
-                {
-                    ImGui::Text("Binds");
-                    std::string bindCombo = "##binds-for-" + std::to_string(reinterpret_cast<uintptr_t>(&getMenuInstance().testSlider));
-
-                    static int selection{};
-                    std::string preview{};
-
-                    static std::optional<std::list<sliderBindInt>::iterator> selectedBind = {};
-                    if (getMenuInstance().testSliderBinds.empty())
-                        preview = "No binds.";
-                    else
-                    {
-                        if (selectedBind.has_value() && selectedBind.value() != getMenuInstance().testSliderBinds.end())
-                            preview = selectedBind.value()->name;
-                    }
-
-                    if (ImGui::BeginCombo(bindCombo.c_str(), preview.c_str()))
-                    {
-                        if (getMenuInstance().testSliderBinds.empty())
-                        {
-                            ImGui::Text("No binds found! Click + to add bind");
-
-                            if (ImGui::SmallButton("+##bind_add"))
-                            {
-                                bindCallback(counter);
-                                selection = 0;
-                                selectedBind.reset();
-                            }
-                        }
-                        else
-                        {
-                            static bool wasErased = false;
-                            int bindsIter = 0;
-                            auto& sliderBinds = getMenuInstance().testSliderBinds;
-                            for (auto it = sliderBinds.begin(); it != sliderBinds.end();)
-                            {
-                                if (wasErased && selection == bindsIter)
-                                {
-                                    selectedBind = it;
-                                    wasErased = false;
-                                }
-
-                                if (ImGui::Selectable(it->name.c_str(), selection == bindsIter, 0, ImVec2(100, 15)))
-                                {
-                                    selection = bindsIter;
-                                    selectedBind = it;
-                                }
-
-                                ImGui::SameLine();
-                                ++bindsIter;
-
-                                const std::string bindPlus = "+##bind_" + it->name;
-                                const std::string bindMinus = "-##bind_" + it->name;
-
-                                if (ImGui::SmallButton(bindPlus.c_str()))
-                                {
-                                    bindCallback(counter);
-                                    selectedBind.reset();
-                                    selection = bindsIter;
-                                    continue;
-                                }
-
-                                ImGui::SameLine();
-
-                                if (ImGui::SmallButton(bindMinus.c_str()))
-                                {
-                                    getMenuInstance().keyBindManager.removeBind(getMenuInstance().keyBindManager.findBind(&it->value)->getBindName());
-                                    it = sliderBinds.erase(it);
-                                    selectedBind.reset();
-                                    selection = bindsIter;
-                                    wasErased = true;
-                                    continue;
-                                }
-
-                                ++it;
-                            }
-                        }
-
-                        ImGui::EndCombo();
-                    }
-
-                    if (selectedBind.has_value())
-                    {
-                        std::string valueName = "Value ##" + selectedBind.value()->name;
-                        std::string bindType = "##bind-type-to" + selectedBind.value()->name;
-
-                        auto currentBind = getMenuInstance().keyBindManager.findBind(&selectedBind.value()->value);
-                        if (currentBind != nullptr)
-                        {
-                            ImGui::Text("Type");
-                            ImGui::Combo(bindType.c_str(), &selectedBind.value()->bindMode, "Always On\0Hold\0Toggle\0Release\0Force Off\0");
-
-                            currentBind->setType(selectedBind.value()->bindMode + 1);
-
-                            ImGui::Text("Current Key");
-                            ImGui::SameLine();
-                            gui::binds::keyBind(currentBind, selectedBind.value()->bindKey, selectedBind.value()->foundKey);
-                        }
-
-                        ImGui::SliderInt(valueName.c_str(), &selectedBind.value()->value, -100, 100);
-                    }
-
-                    ImGui::EndPopup();
-                }
+                using namespace gui::items;
+                slider::render(getMenuInstance().hitChance);
+                slider::render(getMenuInstance().minDamage);
             }
             ImGui::End();
         }

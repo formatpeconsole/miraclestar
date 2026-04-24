@@ -9,19 +9,12 @@
 
 #include "../render/render.h"
 #include "binds/binds.h"
+#include "item.h"
 
 namespace gui
 {
 using namespace binds;
-
-struct sliderBindInt
-{
-    int value = 0;
-    int bindMode = 0;
-    int bindKey = 0;
-    std::string name{};
-    bool foundKey = false;
-};
+using namespace items;
 
 struct Menu
 {
@@ -29,9 +22,29 @@ struct Menu
     bool opened = false;
     bool newOpened = true;
 
-    ItemOldValue<int> testSliderOldValue{};
-    int testSlider = 50;
-    std::list<sliderBindInt> testSliderBinds{};
+    Slider<int> hitChance{
+        .item = {
+            .oldValue = {},
+            .value = 0,
+            .binds = {},
+            .preview = {},
+            .name = "Hit Chance"
+        },
+        .min = 0,
+        .max = 100,
+    };
+
+    Slider<int> minDamage{
+        .item = {
+            .oldValue = {},
+            .value = 0,
+            .binds = {},
+            .preview = {},
+            .name = "Minimum Damage"
+        },
+        .min = 0,
+        .max = 100,
+    };
 
     KeyBindManager keyBindManager{};
 };

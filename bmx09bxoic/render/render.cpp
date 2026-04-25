@@ -124,6 +124,7 @@ void onRender(IDXGISwapChain* pSwapChain)
                 slider::render(getMenuInstance().rage.hitChance);
                 slider::render(getMenuInstance().rage.minDamage);
                 multicombobox::render(getMenuInstance().rage.hitBoxes);
+                colorpicker::render(getMenuInstance().rage.aimHitboxColor);
 
                 if (ImGui::SmallButton("Save"))
                     config::saveConfig();

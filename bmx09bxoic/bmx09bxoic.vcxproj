@@ -134,6 +134,7 @@
     <ClInclude Include="deps\imguiFramework\imstb_textedit.h" />
     <ClInclude Include="deps\imguiFramework\imstb_truetype.h" />
     <ClInclude Include="guiItems\checkbox.h" />
+    <ClInclude Include="guiItems\colorpicker.h" />
     <ClInclude Include="guiItems\combobox.h" />
     <ClInclude Include="guiItems\multicombobox.h" />
     <ClInclude Include="gui\binds\binds.h" />

@@ -57,5 +57,6 @@
     <ClInclude Include="guiItems\checkbox.h" />
     <ClInclude Include="guiItems\combobox.h" />
     <ClInclude Include="guiItems\multicombobox.h" />
+    <ClInclude Include="guiItems\colorpicker.h" />
   </ItemGroup>
 </Project>

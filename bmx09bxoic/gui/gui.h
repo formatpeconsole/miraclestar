@@ -79,7 +79,7 @@ struct RageTab
             .binds = {},
             .preview = {},
             .name = "Hitboxes##rage",
-            .itemType = ITEM_COMBOBOX,
+            .itemType = ITEM_MULTICOMBOBOX,
         },
         .itemsList = {
             "Head",
@@ -89,6 +89,17 @@ struct RageTab
             "Pelvis",
             "Legs",
             "Feet"
+        },
+    };
+
+    ColorPicker aimHitboxColor{
+         .item = {
+            .oldValue = {},
+            .value = 0,
+            .binds = {},
+            .preview = {},
+            .name = "Aim Hitbox Color##rage",
+            .itemType = ITEM_COLOR,
         },
     };
 };

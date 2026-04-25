@@ -71,4 +71,9 @@ struct MultiComboBox
     Item<unsigned int> item{};
     std::vector<std::string> itemsList{};
 };
+
+struct ColorPicker
+{
+    Item<unsigned int> item{};
+};
 }

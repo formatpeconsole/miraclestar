@@ -5,6 +5,7 @@
 #include "checkbox.h"
 #include "combobox.h"
 #include "multicombobox.h"
+#include "colorpicker.h"
 
 namespace gui::items
 {

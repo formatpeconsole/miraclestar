@@ -5,5 +5,5 @@
 
 namespace gui::items
 {
-void printAllItems();
+
 }

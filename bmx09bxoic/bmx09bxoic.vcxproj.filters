@@ -27,6 +27,7 @@
     <ClCompile Include="gui\binds\binds.cpp" />
     <ClCompile Include="guiItems\items.cpp" />
     <ClCompile Include="utils\uuid.cpp" />
+    <ClCompile Include="config\config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="threadpool\threadpool.h" />
@@ -52,5 +53,6 @@
     <ClInclude Include="guiItems\items.h" />
     <ClInclude Include="gui\item.h" />
     <ClInclude Include="utils\uuid.h" />
+    <ClInclude Include="config\config.h" />
   </ItemGroup>
 </Project>

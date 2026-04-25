@@ -3,13 +3,13 @@
   "spdxVersion": "SPDX-2.2",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "documentNamespace": "https://spdx.org/spdxdocs/freetype-x64-windows-static-2.14.3-6d2ac5e0-dd0c-49af-a070-81932c7b193d",
-  "name": "freetype:x64-windows-static@2.14.3 2aa8f5ee35d19799932babe4391949965a6218ac4f2230ac1d74a4162377a6c2",
+  "documentNamespace": "https://spdx.org/spdxdocs/freetype-x64-windows-static-2.14.3-9bd01e71-3621-4ec2-b5bf-2d79bf0fc313",
+  "name": "freetype:x64-windows-static@2.14.3 bde128b95f108579565e70161560fece32496c53dd0a502a932be4d1b7ebfa4d",
   "creationInfo": {
     "creators": [
       "Tool: vcpkg-2026-04-08-e0612b42ce44e55a0e630f2ee9d3c533a63d8bc1"
     ],
-    "created": "2026-04-12T12:27:11Z"
+    "created": "2026-04-25T08:09:13Z"
   },
   "relationships": [
     {
@@ -424,7 +424,7 @@
     {
       "name": "freetype:x64-windows-static",
       "SPDXID": "SPDXRef-binary",
-      "versionInfo": "2aa8f5ee35d19799932babe4391949965a6218ac4f2230ac1d74a4162377a6c2",
+      "versionInfo": "bde128b95f108579565e70161560fece32496c53dd0a502a932be4d1b7ebfa4d",
       "downloadLocation": "NONE",
       "licenseConcluded": "(FTL OR GPL-2.0-or-later)",
       "licenseDeclared": "NOASSERTION",
@@ -573,7 +573,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "731ceec8a9a9e596191e168dd5802b777e1b21c7e853aa7138d519c8f03545b1"
+          "checksumValue": "816f9a76837c0ba2108d4c8321a70c8db290e91c712833314760de7d2820a3ba"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -1257,7 +1257,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b953f57f149d2c48ba1bede29906b1a721420b145ed77bea5dad72479d28050d"
+          "checksumValue": "477dd844e3a068740ee7553fd9c6e6b3b2451db81027c0f3c81a3a7dbc15b083"
         }
       ],
       "licenseConcluded": "NOASSERTION",

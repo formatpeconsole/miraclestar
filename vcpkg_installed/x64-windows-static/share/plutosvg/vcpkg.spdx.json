@@ -3,13 +3,13 @@
   "spdxVersion": "SPDX-2.2",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "documentNamespace": "https://spdx.org/spdxdocs/plutosvg-x64-windows-static-0.0.7-a1580e2f-7bef-47d4-b9ad-a590f083eb50",
-  "name": "plutosvg:x64-windows-static@0.0.7 e9738091d6a3fcf24e9d08e6c365a9e4d0213fc2896b35c83a680e0b492e622b",
+  "documentNamespace": "https://spdx.org/spdxdocs/plutosvg-x64-windows-static-0.0.7-eb639cfc-a2d7-473a-bfe8-d297631988cb",
+  "name": "plutosvg:x64-windows-static@0.0.7 5f60142eea65d42cbbfbe660337d5065b87e9e1ff54a1d325b144099b27172fc",
   "creationInfo": {
     "creators": [
       "Tool: vcpkg-2026-04-08-e0612b42ce44e55a0e630f2ee9d3c533a63d8bc1"
     ],
-    "created": "2026-04-12T12:27:23Z"
+    "created": "2026-04-25T08:09:46Z"
   },
   "relationships": [
     {
@@ -114,7 +114,7 @@
     {
       "name": "plutosvg:x64-windows-static",
       "SPDXID": "SPDXRef-binary",
-      "versionInfo": "e9738091d6a3fcf24e9d08e6c365a9e4d0213fc2896b35c83a680e0b492e622b",
+      "versionInfo": "5f60142eea65d42cbbfbe660337d5065b87e9e1ff54a1d325b144099b27172fc",
       "downloadLocation": "NONE",
       "licenseConcluded": "MIT",
       "licenseDeclared": "NOASSERTION",
@@ -191,7 +191,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "7d940b62e3a2f7b68bee35a83fba6cd17cc52740bc376574e0c674d5dfbba32b"
+          "checksumValue": "35d4c757dd67571aaa3c867a5cc6d6fef4fd250bb3f887477dac3d277adfb171"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -239,7 +239,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6460e3fb4dbeed48a1a7cdd79f36e7bee0b74582e4436089604776557186c13e"
+          "checksumValue": "2e75812662ad69c7df9b431673901251a37613be287f66e56a66bc4f1b7e331a"
         }
       ],
       "licenseConcluded": "NOASSERTION",

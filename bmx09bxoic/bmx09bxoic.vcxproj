@@ -45,11 +45,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(SolutionDir)bmx09bxoic\deps\minHook;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(SolutionDir)vcpkg_installed\x64-windows-static\include\nlohmann;$(SolutionDir)bmx09bxoic\deps\minHook;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows-static\lib;$(LibraryPath);$(SolutionDir)bmx09bxoic\deps\minHook</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(SolutionDir)bmx09bxoic\deps\minHook;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)vcpkg_installed\x64-windows-static\include;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype;$(SolutionDir)vcpkg_installed\x64-windows-static\include\freetype\config;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutovg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\plutosvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\lunasvg;$(SolutionDir)vcpkg_installed\x64-windows-static\include\libpng16;$(SolutionDir)vcpkg_installed\x64-windows-static\include\nlohmann;$(SolutionDir)bmx09bxoic\deps\minHook;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)vcpkg_installed\x64-windows-static\debug\lib;$(LibraryPath);$(SolutionDir)bmx09bxoic\deps\minHook</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
@@ -100,6 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="config\config.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_demo.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_draw.cpp" />
@@ -121,6 +122,7 @@
     <ClCompile Include="utils\uuid.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config\config.h" />
     <ClInclude Include="deps\imguiFramework\imconfig.h" />
     <ClInclude Include="deps\imguiFramework\imgui.h" />
     <ClInclude Include="deps\imguiFramework\imgui_freetype.h" />

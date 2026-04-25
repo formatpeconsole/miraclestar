@@ -3,13 +3,13 @@
   "spdxVersion": "SPDX-2.2",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "documentNamespace": "https://spdx.org/spdxdocs/libpng-x64-windows-static-1.6.57-b3b9140b-11bd-4afe-a1b5-9c372afb2dcf",
-  "name": "libpng:x64-windows-static@1.6.57 78b79d2e0915e555ef12f52b88fb88c75c67bd1d371076199d9288769b665109",
+  "documentNamespace": "https://spdx.org/spdxdocs/libpng-x64-windows-static-1.6.57-04379d82-8cf0-4dcb-9201-dba0f7be1dcf",
+  "name": "libpng:x64-windows-static@1.6.57 d19ba0cb9463854b108ab39568d843a12ee42eb49a6e05536b53c96422a3956c",
   "creationInfo": {
     "creators": [
       "Tool: vcpkg-2026-04-08-e0612b42ce44e55a0e630f2ee9d3c533a63d8bc1"
     ],
-    "created": "2026-04-12T12:26:51Z"
+    "created": "2026-04-25T08:08:54Z"
   },
   "relationships": [
     {
@@ -194,7 +194,7 @@
     {
       "name": "libpng:x64-windows-static",
       "SPDXID": "SPDXRef-binary",
-      "versionInfo": "78b79d2e0915e555ef12f52b88fb88c75c67bd1d371076199d9288769b665109",
+      "versionInfo": "d19ba0cb9463854b108ab39568d843a12ee42eb49a6e05536b53c96422a3956c",
       "downloadLocation": "NONE",
       "licenseConcluded": "libpng-2.0",
       "licenseDeclared": "NOASSERTION",
@@ -322,7 +322,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "5ef81a9ea594b53ebba598b3e0d1e15803c49f178fba8a4065f7f60db94931b7"
+          "checksumValue": "ce03c91b467605d3ace4edc62c2627f0aa3e68fd9fb34474bc4119d4f596aa75"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -430,7 +430,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2b8c59f9a9a611d32a9f55d24898c518b6712f056b79b0742fb0c801a699a370"
+          "checksumValue": "d16a218953391d34e6bb582d8ff3e8ac0482ad5fa74fbcf509fb82670edc498c"
         }
       ],
       "licenseConcluded": "NOASSERTION",

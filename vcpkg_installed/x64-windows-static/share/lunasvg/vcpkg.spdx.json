@@ -3,13 +3,13 @@
   "spdxVersion": "SPDX-2.2",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "documentNamespace": "https://spdx.org/spdxdocs/lunasvg-x64-windows-static-3.5.0-755c877f-3cdc-4242-a036-0708117804a5",
-  "name": "lunasvg:x64-windows-static@3.5.0 0ebdf168c521bdca6a54761de45f07ef86e5e55b65d7fc6ef0eaaf047d1be90c",
+  "documentNamespace": "https://spdx.org/spdxdocs/lunasvg-x64-windows-static-3.5.0-45194b10-326c-4a96-b8e1-e4e5922348ad",
+  "name": "lunasvg:x64-windows-static@3.5.0 4e5ffccd94ffb317120afcfc3966e4447fd65b5e7e6af5a572475bd5d12acaf6",
   "creationInfo": {
     "creators": [
       "Tool: vcpkg-2026-04-08-e0612b42ce44e55a0e630f2ee9d3c533a63d8bc1"
     ],
-    "created": "2026-04-12T12:27:20Z"
+    "created": "2026-04-25T08:09:23Z"
   },
   "relationships": [
     {
@@ -109,7 +109,7 @@
     {
       "name": "lunasvg:x64-windows-static",
       "SPDXID": "SPDXRef-binary",
-      "versionInfo": "0ebdf168c521bdca6a54761de45f07ef86e5e55b65d7fc6ef0eaaf047d1be90c",
+      "versionInfo": "4e5ffccd94ffb317120afcfc3966e4447fd65b5e7e6af5a572475bd5d12acaf6",
       "downloadLocation": "NONE",
       "licenseConcluded": "MIT",
       "licenseDeclared": "NOASSERTION",
@@ -174,7 +174,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "7152f2c36a28186bb4b702984caf46dbf1db223e2e3b5c1fcabd89c8a4b6951d"
+          "checksumValue": "5f87f3c58323a3bd6f6416a1a9fd41fa81a19966458bd97393ee8dda8cc08cef"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -210,7 +210,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "641a92d5b05fc1c1125725baf7c3301f95913a19e1ddea7407d73049b447e389"
+          "checksumValue": "c2b54f9a509edb69612e7f609b0f7d30b4c4edffa8db971b125f5746533e6181"
         }
       ],
       "licenseConcluded": "NOASSERTION",

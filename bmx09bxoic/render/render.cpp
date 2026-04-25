@@ -3,6 +3,7 @@
 #include "../hooks/hooks.h"
 #include "../gui/gui.h"
 #include "../guiItems/items.h"
+#include "../config/config.h"
 
 namespace render
 {
@@ -120,6 +121,12 @@ void onRender(IDXGISwapChain* pSwapChain)
                 using namespace gui::items;
                 slider::render(getMenuInstance().hitChance);
                 slider::render(getMenuInstance().minDamage);
+
+                if (ImGui::SmallButton("Save"))
+                    config::saveConfig();
+                ImGui::SameLine();
+                if (ImGui::SmallButton("Load"))
+                    config::loadConfig();
             }
             ImGui::End();
         }

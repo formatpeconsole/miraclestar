@@ -2,14 +2,14 @@ Package: vcpkg-cmake-config
 Version: 2024-05-23
 Architecture: x64-windows
 Multi-Arch: same
-Abi: e1e16badcb4fd03fd5542d291c1475f647b5b30ea13ac9e8ed2412ea3b6115f2
+Abi: e9ceec67830736ec95c077c6a0bc325221f5da53ea70eac29d6d77b8254a2af2
 Status: install ok installed
 
 Package: vcpkg-cmake
 Version: 2024-04-23
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 104149fe026f4bbfaf7278458c3e462433e28fa407cf54987e52ba2a3be16b8d
+Abi: fbfede779615d60596855dcca6dd9949a88d2ef6d677ea68f6ede0c72075d590
 Status: install ok installed
 
 Package: fmt
@@ -149,7 +149,7 @@ Version: 1.3.1
 Depends: vcpkg-cmake:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: 4de3dcdf88cfa7f4c73f9e9954ce8ba41fdebe0a4b855660165c9185d1ec232c
+Abi: 040ae879200efed9b52a657c134c994df72161dfda1438269a4c358bccc541a3
 Description: A compression library
 Status: install ok installed
 
@@ -158,7 +158,7 @@ Version: 1.6.57
 Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows, zlib
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: 78b79d2e0915e555ef12f52b88fb88c75c67bd1d371076199d9288769b665109
+Abi: d19ba0cb9463854b108ab39568d843a12ee42eb49a6e05536b53c96422a3956c
 Description: libpng is a library implementing an interface for reading and writing PNG (Portable Network Graphics) format files
 Status: install ok installed
 
@@ -168,7 +168,7 @@ Port-Version: 6
 Depends: vcpkg-cmake:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: 9162e381e70f822da7560930a68b05a0b51195f9686b1b35a3f67b761694d059
+Abi: b061cd5ad0e98ad6c64b41fa1dd8334e233bb2679f19c2404f4bde5e7e56bfaf
 Description: bzip2 is a freely available, patent free, high-quality data compressor. It typically compresses files to within 10% to 15% of the best available techniques (the PPM family of statistical compressors), whilst being around twice as fast at compression and six times faster at decompression.
 Default-Features: tool
 Status: install ok installed
@@ -185,7 +185,7 @@ Version: 1.2.0
 Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: dcc016517268091955f57096a149c6aa4002ff070dca803be282321da06e5e07
+Abi: b344210bdd2490b6e04cb4163b8e28c45049f7ab467e4d9845babde7ebc6f381
 Description: a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling.
 Status: install ok installed
 
@@ -194,7 +194,7 @@ Version: 2.14.3
 Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: 2aa8f5ee35d19799932babe4391949965a6218ac4f2230ac1d74a4162377a6c2
+Abi: bde128b95f108579565e70161560fece32496c53dd0a502a932be4d1b7ebfa4d
 Description: A library to render fonts.
 Default-Features: brotli, bzip2, png, zlib
 Status: install ok installed
@@ -236,7 +236,7 @@ Version: 1.3.2
 Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: 62699865fbb73e77bcb1ae490d5ae3e56e9a1cae45c726807f9d92e63036663a
+Abi: 8d23138114775fb9c68d19b6393be1bf6141a05c660a3d25c4b9d68885b3925b
 Description: Tiny 2D vector graphics library in C
 Status: install ok installed
 
@@ -245,7 +245,7 @@ Version: 3.5.0
 Depends: plutovg, vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: 0ebdf168c521bdca6a54761de45f07ef86e5e55b65d7fc6ef0eaaf047d1be90c
+Abi: 4e5ffccd94ffb317120afcfc3966e4447fd65b5e7e6af5a572475bd5d12acaf6
 Description: lunasvg is a standalone SVG rendering library in C++
 Status: install ok installed
 
@@ -254,7 +254,26 @@ Version: 0.0.7
 Depends: plutovg, vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
 Architecture: x64-windows-static
 Multi-Arch: same
-Abi: e9738091d6a3fcf24e9d08e6c365a9e4d0213fc2896b35c83a680e0b492e622b
+Abi: 5f60142eea65d42cbbfbe660337d5065b87e9e1ff54a1d325b144099b27172fc
 Description: Tiny SVG rendering library in C
+Status: install ok installed
+
+Package: 7zip
+Version: 26.0
+Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 44abdce8edb25e05c00f2ab9f08181b4864b0b17402ba9c1a431b7779bd472a5
+Description: Library for archiving file with a high compression ratio.
+Status: install ok installed
+
+Package: nlohmann-json
+Version: 3.12.0
+Port-Version: 2
+Depends: vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows
+Architecture: x64-windows-static
+Multi-Arch: same
+Abi: 5d3d24f0b9cbb474f46e07e8909db9a611fa3fe4aa0351a61ad147586b5616b8
+Description: JSON for Modern C++
 Status: install ok installed
 

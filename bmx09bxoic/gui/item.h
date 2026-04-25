@@ -22,7 +22,7 @@ struct BindValues
     std::string name{};
     std::string lastKey{};
     std::string label{ "Press any key" };
-    bool foundKey = false;
+    bool keyEmpty = false;
 };
 
 template<typename T>

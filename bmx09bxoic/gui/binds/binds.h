@@ -331,6 +331,26 @@ public:
         }
     }
 
+    void eraseAllBinds()
+    {
+        for (auto it = keyBinds.begin(); it != keyBinds.end();)
+        {
+            if ((*it)->getItemType() == ITEM_UI_OPEN)
+            {
+                it = std::next(it);
+                continue;
+            }
+
+            const auto foundBlock = uiBlock.find((*it)->getItemPtr());
+            if (foundBlock != uiBlock.end())
+            {
+                uiBlock.erase(foundBlock);
+            }
+            (*it)->setValueToOld();
+            it = keyBinds.erase(it);
+        }
+    }
+
     bindList& getBindList()
     {
         return keyBinds;
@@ -590,11 +610,11 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam);
 template<typename T>
 void keyBind(const std::shared_ptr<IKeyBind> bind, typename T::iterator it)
 {
-    if (!it->foundKey)
+    if (!it->keyEmpty)
     {
         if (ImGui::SmallButton(it->label.c_str()))
         {
-            it->foundKey = true;
+            it->keyEmpty = true;
         }
     }
     else
@@ -606,7 +626,7 @@ void keyBind(const std::shared_ptr<IKeyBind> bind, typename T::iterator it)
         {
             it->bindKey = -1;
             it->label = "None";
-            it->foundKey = false;
+            it->keyEmpty = false;
             return;
         }
 
@@ -635,7 +655,7 @@ void keyBind(const std::shared_ptr<IKeyBind> bind, typename T::iterator it)
                 }
 
                 it->label = ImGui_ImplWin32_VKeyToString(it->bindKey);
-                it->foundKey = false;
+                it->keyEmpty = false;
                 bind->setKey(it->bindKey);
                 keyFound = true;
                 break;
@@ -651,7 +671,7 @@ void keyBind(const std::shared_ptr<IKeyBind> bind, typename T::iterator it)
             {
                 it->bindKey = (int)ImGui_ImplWin32_ImGuiKeyToKeyEvent((ImGuiKey)i);
                 it->label = ImGui_ImplWin32_VKeyToString(it->bindKey);
-                it->foundKey = false;
+                it->keyEmpty = false;
                 bind->setKey(it->bindKey);
                 break;
             }

@@ -128,14 +128,12 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
     auto& bindList = bindManager.getBindList();
     auto buttonKey = getButtonKey(getKeyByMessage(uMsg, wParam));
 
-    const auto correctBind = std::find_if(bindList.begin(), bindList.end(), [buttonKey](const std::shared_ptr<IKeyBind>& keyBind)
-        {
-            return keyBind->getKey() == buttonKey;
-        });
-
-    if (correctBind != bindList.end())
+    for (auto it = bindList.begin(); it != bindList.end(); ++it)
     {
-        auto bindToUpdate = (*correctBind);
+        if ((*it)->getKey() != buttonKey)
+            continue;
+
+        auto bindToUpdate = (*it);
         const auto bindType = bindToUpdate->getType();
 
         if (bindType != BIND_ALWAYS_ON && bindType != BIND_FORCE_OFF)

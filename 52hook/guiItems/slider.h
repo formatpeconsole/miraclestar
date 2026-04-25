@@ -85,6 +85,13 @@ inline void render(Slider<T>& slider)
             {
                 ImGui::Text("No binds found! Click + to add bind");
 
+                if (preview.erased)
+                {
+                    preview.selection = 0;
+                    preview.selectedBind.reset();
+                    preview.erased = false;
+                }
+
                 if (ImGui::SmallButton(bindAdd.c_str()))
                 {
                     bindCallback<T>(slider);

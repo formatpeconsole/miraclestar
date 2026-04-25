@@ -5,6 +5,7 @@
 #include <json.hpp>
 
 #include "../gui/gui.h"
+#include "../gui/binds/utils.h"
 #include "../utils/uuid.h"
 
 #define SAVE_ITEM(section, element) addItem(section[getItemName(element.item)], element.item);

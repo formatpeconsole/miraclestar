@@ -28,6 +28,7 @@
     <ClCompile Include="guiItems\items.cpp" />
     <ClCompile Include="utils\uuid.cpp" />
     <ClCompile Include="config\config.cpp" />
+    <ClCompile Include="gui\binds\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="threadpool\threadpool.h" />
@@ -60,5 +61,7 @@
     <ClInclude Include="guiItems\colorpicker.h" />
     <ClInclude Include="guiItems\utils.h" />
     <ClInclude Include="guiItems\keybind.h" />
+    <ClInclude Include="gui\binds\binds-manager.h" />
+    <ClInclude Include="gui\binds\utils.h" />
   </ItemGroup>
 </Project>

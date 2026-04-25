@@ -130,9 +130,6 @@ struct Menu
 
 extern void init();
 extern void destroy();
-extern void updateAliveBindValues();
-extern void renderDebugBindsWindow();
-extern void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 extern Menu& getMenuInstance();
 }

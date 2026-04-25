@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../gui/item.h"
+#include "../gui/binds/utils.h"
 
 namespace gui::items
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include "../gui/item.h"
 #include "../gui/gui.h"
+#include "../gui/binds/utils.h"
 
 namespace gui::items::keybind
 {

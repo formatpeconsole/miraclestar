@@ -90,11 +90,11 @@ inline void printAllItems()
 }
 
 template<typename T>
-inline void addSliderBind(Slider<T>& slider, int& counter)
+inline void addSliderBind(Slider<T>& slider)
 {
     auto& item = slider.item;
     auto& newBind = item.binds.emplace_back();
-    newBind.name = "SliderBind-For " + item.name + " " + std::to_string(counter++);
+    newBind.name = "SliderBind-For " + item.name + " " + uuid::getUuid();
 
     getMenuInstance().keyBindManager.addBind(
         &item.value,
@@ -159,7 +159,7 @@ inline void render(Slider<T>& slider)
 
                 if (ImGui::SmallButton(bindAdd.c_str()))
                 {
-                    bindCallback<T>(slider, preview.bindCounter);
+                    bindCallback<T>(slider);
 
                     preview.selection = 0;
                     preview.selectedBind.reset();
@@ -191,7 +191,7 @@ inline void render(Slider<T>& slider)
 
                     if (ImGui::SmallButton(bindPlus.c_str()))
                     {
-                        bindCallback<T>(slider, preview.bindCounter);
+                        bindCallback<T>(slider);
                         preview.selectedBind.reset();
                         preview.selection = bindsIter;
                         continue;

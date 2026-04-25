@@ -73,7 +73,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>libMinHook.x64.lib;bz2.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlib.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libMinHook.x64.lib;rpcrt4.lib;bz2.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlib.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -96,7 +96,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>libMinHook.x64.lib;bz2d.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlibd.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16d.lib;freetyped.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libMinHook.x64.lib;rpcrt4.lib;bz2d.lib;brotlicommon.lib;brotlidec.lib;brotlienc.lib;zlibd.lib;lunasvg.lib;plutosvg.lib;plutovg.lib;libpng16d.lib;freetyped.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -118,6 +118,7 @@
     <ClCompile Include="mem\sigscan.cpp" />
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="threadpool\threadpool.cpp" />
+    <ClCompile Include="utils\uuid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\imguiFramework\imconfig.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="mem\sigscan.h" />
     <ClInclude Include="render\render.h" />
     <ClInclude Include="threadpool\threadpool.h" />
+    <ClInclude Include="utils\uuid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

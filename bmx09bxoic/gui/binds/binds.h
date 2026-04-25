@@ -8,6 +8,7 @@
 #include <Windows.h>
 
 #include "../../render/render.h"
+#include "../../utils/uuid.h"
 
 namespace gui::binds
 {
@@ -272,10 +273,9 @@ class KeyBindManager
 {
 private:
     bindList keyBinds{};
-    int bindCounter = 0;
+    std::unordered_map<void*, UiBlock> uiBlock{};
 
 public:
-    std::unordered_map<void*, UiBlock> uiBlock{};
 
     void init()
     {
@@ -291,7 +291,7 @@ public:
     template<typename T>
     void addBind(T* ptr, T* bindPtr, ItemOldValue<T>* oldValue, int type, int itemType, int key, std::string name)
     {
-        std::string bindName = name + std::to_string(bindCounter++);
+        std::string bindName = name + uuid::getUuid();
 
         std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, oldValue, type, itemType, key, bindName);
         bind->setOldValue();
@@ -328,7 +328,6 @@ public:
 
             (*it)->setValueToOld();
             keyBinds.erase(it);
-            --bindCounter;
         }
     }
 

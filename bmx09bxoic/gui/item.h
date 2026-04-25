@@ -29,7 +29,6 @@ template<typename T>
 struct BindPreview
 {
     int selection = 0;
-    int bindCounter = 0;
     std::string label{};
     std::optional<typename std::list<BindValues<T>>::iterator> selectedBind{};
     bool erased = false;

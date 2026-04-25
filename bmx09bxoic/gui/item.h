@@ -65,4 +65,10 @@ struct ComboBox
     Item<int> item{};
     std::vector<std::string> itemsList{};
 };
+
+struct MultiComboBox
+{
+    Item<unsigned int> item{};
+    std::vector<std::string> itemsList{};
+};
 }

@@ -4,6 +4,7 @@
 #include "slider.h"
 #include "checkbox.h"
 #include "combobox.h"
+#include "multicombobox.h"
 
 namespace gui::items
 {

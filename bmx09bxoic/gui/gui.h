@@ -71,6 +71,26 @@ struct RageTab
             "FOV",
         },
     };
+
+    MultiComboBox hitBoxes{
+         .item = {
+            .oldValue = {},
+            .value = 0,
+            .binds = {},
+            .preview = {},
+            .name = "Hitboxes##rage",
+            .itemType = ITEM_COMBOBOX,
+        },
+        .itemsList = {
+            "Head",
+            "Neck",
+            "Chest",
+            "Stomach",
+            "Pelvis",
+            "Legs",
+            "Feet"
+        },
+    };
 };
 
 struct Menu

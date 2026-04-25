@@ -157,6 +157,7 @@ void loadConfig()
         LOAD_ITEM(rageSection, instance.rage.hitChance);
         LOAD_ITEM(rageSection, instance.rage.minDamage);
         LOAD_ITEM(rageSection, instance.rage.targetSelection);
+        LOAD_ITEM(rageSection, instance.rage.hitBoxes);
     }
 }
 
@@ -173,6 +174,7 @@ void saveConfig()
         SAVE_ITEM(rageSection, instance.rage.hitChance);
         SAVE_ITEM(rageSection, instance.rage.minDamage);
         SAVE_ITEM(rageSection, instance.rage.targetSelection);
+        SAVE_ITEM(rageSection, instance.rage.hitBoxes);
     }
 
     configFile << jsonToWrite;

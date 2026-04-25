@@ -123,6 +123,7 @@ void onRender(IDXGISwapChain* pSwapChain)
                 combobox::render(getMenuInstance().rage.targetSelection);
                 slider::render(getMenuInstance().rage.hitChance);
                 slider::render(getMenuInstance().rage.minDamage);
+                multicombobox::render(getMenuInstance().rage.hitBoxes);
 
                 if (ImGui::SmallButton("Save"))
                     config::saveConfig();

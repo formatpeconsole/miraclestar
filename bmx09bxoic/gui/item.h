@@ -44,7 +44,9 @@ struct Item
 
     BindPreview<T> preview{};
     std::string name{};
+
     int itemType{};
+    std::vector<std::string> itemsList{};
 };
 
 template<typename T>
@@ -64,13 +66,11 @@ struct CheckBox
 struct ComboBox
 {
     Item<int> item{};
-    std::vector<std::string> itemsList{};
 };
 
 struct MultiComboBox
 {
     Item<unsigned int> item{};
-    std::vector<std::string> itemsList{};
 };
 
 struct ColorPicker

@@ -86,7 +86,7 @@ public:
     virtual void setPressed(bool state) = 0;
 
     virtual void setOldValue() = 0;
-    virtual void setNewValue() = 0;
+    virtual void updateNewValue() = 0;
 
     virtual void setValueToNew() = 0;
     virtual void setValueToOld() = 0;
@@ -94,8 +94,12 @@ public:
     virtual void setBindToOn() = 0;
 
     virtual bool isValueSet() = 0;
+
+    virtual std::string getItemName() = 0;
     virtual std::string getBindName() = 0;
     virtual std::string getBindValue() = 0;
+
+    virtual std::vector<std::string> getSelectionList() = 0;
 
     virtual ~IKeyBind() = default;
 };
@@ -104,16 +108,19 @@ template<typename T>
 class KeyBind : public IKeyBind
 {
 public:
-    KeyBind(T* item, T* bind, ItemOldValue<T>* oldValue, int type, int itemType, int key, std::string name)
+    KeyBind(T* item, T* bind, ItemOldValue<T>* oldValue, 
+            int type, int itemType, int key, 
+            std::string name, std::string itemName,
+            std::vector<std::string> selectionList)
         : itemPtr(item),
-        bindItemPtr(bind),
-        oldValue(oldValue),
-        type(type),
-        itemType(itemType),
-        key(key),
-        name(name)
-    {
-    }
+            bindItemPtr(bind),
+            oldValue(oldValue),
+            type(type),
+            itemType(itemType),
+            key(key),
+            name(name),
+            itemName(itemName),
+            selectionList(selectionList) {}
 
     int getType() override
     {
@@ -135,6 +142,11 @@ public:
         return key;
     }
 
+    std::string getItemName() override
+    {
+        return itemName;
+    }
+
     std::string getBindName() override
     {
         return name;
@@ -143,6 +155,11 @@ public:
     std::string getBindValue() override
     {
         return bindValue;
+    }
+
+    std::vector<std::string> getSelectionList() override
+    {
+        return selectionList;
     }
 
     void* getItemPtr() override
@@ -195,7 +212,7 @@ public:
         oldValue->setOldValue(*itemPtr);
     }
 
-    void setNewValue() override
+    void updateNewValue() override
     {
         newValue = *bindItemPtr;
         bindValue = std::to_string(newValue);
@@ -257,7 +274,10 @@ private:
     bool setOff = false;
 
     std::string name{};
+    std::string itemName{};
     std::string bindValue{};
+
+    std::vector<std::string> selectionList{};
 };
 
 struct UiBlock
@@ -283,13 +303,20 @@ public:
         uiBlock.clear();
     }
 
-    template<typename T>
-    void addBind(T* ptr, T* bindPtr, ItemOldValue<T>* oldValue, int type, int itemType, int key, std::string name)
+    template<typename T>    
+    void addBind(T* ptr, T* bindPtr, ItemOldValue<T>* oldValue, 
+        int type, int itemType, int key, 
+        std::string name, std::string itemName,
+        std::vector<std::string> selectionList)
     {
         std::string bindName = name + uuid::getUuid();
 
-        std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, oldValue, type, itemType, key, bindName);
-        bind->setOldValue();
+        std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, oldValue,
+            type, itemType, key,
+            bindName, itemName,
+            selectionList);
+
+        bind->setOldValue(); 
         keyBinds.emplace_back(bind);
     }
 
@@ -494,7 +521,7 @@ public:
             if (bind->getItemType() == ITEM_UI_OPEN)
                 continue;
 
-            bind->setNewValue();
+            bind->updateNewValue();
         }
     }
 

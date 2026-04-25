@@ -112,6 +112,7 @@ void onRender(IDXGISwapChain* pSwapChain)
         ImGui::NewFrame();
 
         gui::renderMainUI();
+        gui::renderBindsDebugWindow();
 
         ImGui::EndFrame();
         ImGui::Render();

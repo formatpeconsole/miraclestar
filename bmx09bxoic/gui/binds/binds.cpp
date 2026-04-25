@@ -13,6 +13,8 @@ void initBinds()
         BIND_TOGGLE,
         ITEM_UI_OPEN,
         VK_INSERT,
+        {},
+        {},
         {}
     );
 
@@ -26,7 +28,7 @@ void initBinds()
     {
         auto bindToUpdate = (*menuKey);
         bindToUpdate->setOldValue();
-        bindToUpdate->setNewValue();
+        bindToUpdate->updateNewValue();
     }
 }
 void destroyBinds()

@@ -27,7 +27,9 @@ inline void addCheckBoxBind(CheckBox& checkbox)
         BIND_NONE,
         item.itemType,
         0,
-        newBind.name
+        newBind.name,
+        checkbox.item.name,
+        {}
     );
 }
 

@@ -27,7 +27,9 @@ inline void addComboBoxBind(ComboBox& comboBox)
         BIND_NONE,
         item.itemType,
         0,
-        newBind.name
+        newBind.name,
+        comboBox.item.name,
+        comboBox.item.itemsList
     );
 }
 
@@ -53,10 +55,10 @@ inline void render(ComboBox& comboBox)
 
     std::string bindOpenPopup = "* ##" + itemKey;
 
-    auto comboSize = static_cast<int>(comboBox.itemsList.size());
+    auto comboSize = static_cast<int>(item.itemsList.size());
 
     {
-        ImGui::Combo(item.name.c_str(), &item.value, Items_VectorGetter, comboBox.itemsList.data(), comboSize);
+        ImGui::Combo(item.name.c_str(), &item.value, Items_VectorGetter, item.itemsList.data(), comboSize);
         item.value = std::clamp(item.value, 0, comboSize - 1);
     }
 
@@ -161,8 +163,8 @@ inline void render(ComboBox& comboBox)
             value->previewName = getPreviewItemName(*value);
 
             {
-                auto comboSize = static_cast<int>(comboBox.itemsList.size());
-                ImGui::Combo(valueName.c_str(), &value->value, Items_VectorGetter, comboBox.itemsList.data(), static_cast<int>(comboBox.itemsList.size()));
+                auto comboSize = static_cast<int>(item.itemsList.size());
+                ImGui::Combo(valueName.c_str(), &value->value, Items_VectorGetter, item.itemsList.data(), static_cast<int>(item.itemsList.size()));
                 item.value = std::clamp(item.value, 0, comboSize - 1);
             }
         }

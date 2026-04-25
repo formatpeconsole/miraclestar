@@ -27,7 +27,9 @@ inline void addMultiComboBoxBind(MultiComboBox& multiComboBox)
         BIND_NONE,
         item.itemType,
         0,
-        newBind.name
+        newBind.name,
+        multiComboBox.item.name,
+        multiComboBox.item.itemsList
     );
 }
 
@@ -68,15 +70,15 @@ inline void render(MultiComboBox& multiComboBox)
     std::string bindOpenPopup = "* ##" + itemKey;
 
     {
-        auto comboSize = static_cast<int>(multiComboBox.itemsList.size());
+        auto comboSize = static_cast<int>(item.itemsList.size());
 
-        std::string preview = GetFlagPreview(item.value, multiComboBox.itemsList);
+        std::string preview = GetFlagPreview(item.value, item.itemsList);
         if (ImGui::BeginCombo(item.name.c_str(), preview.c_str()))
         {
             for (int i = 0; i < comboSize; ++i)
             {
                 const auto step = 1 << i;
-                if (ImGui::Selectable(multiComboBox.itemsList[i].c_str(), (item.value & step), ImGuiSelectableFlags_DontClosePopups))
+                if (ImGui::Selectable(item.itemsList[i].c_str(), (item.value & step), ImGuiSelectableFlags_DontClosePopups))
                 {
                     if ((item.value & step))
                         item.value &= ~step;
@@ -190,15 +192,15 @@ inline void render(MultiComboBox& multiComboBox)
             value->previewName = getPreviewItemName(*value);
 
             {
-                auto comboSize = static_cast<int>(multiComboBox.itemsList.size());
+                auto comboSize = static_cast<int>(item.itemsList.size());
 
-                std::string preview = GetFlagPreview(value->value, multiComboBox.itemsList);
+                std::string preview = GetFlagPreview(value->value, item.itemsList);
                 if (ImGui::BeginCombo(valueName.c_str(), preview.c_str()))
                 {
                     for (int i = 0; i < comboSize; ++i)
                     {
                         const auto step = 1 << i;
-                        if (ImGui::Selectable(multiComboBox.itemsList[i].c_str(), (value->value & step), ImGuiSelectableFlags_DontClosePopups))
+                        if (ImGui::Selectable(item.itemsList[i].c_str(), (value->value & step), ImGuiSelectableFlags_DontClosePopups))
                         {
                             if ((value->value & step))
                                 value->value &= ~step;

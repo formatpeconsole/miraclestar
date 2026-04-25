@@ -26,6 +26,7 @@ struct RageTab
             .preview = {},
             .name = "Enable##rage",
             .itemType = ITEM_CHECKBOX,
+            .itemsList = {},
         }
     };
 
@@ -37,6 +38,7 @@ struct RageTab
             .preview = {},
             .name = "Hit Chance##rage",
             .itemType = ITEM_SLIDER_INT,
+            .itemsList = {},
         },
         .min = 0,
         .max = 100,
@@ -50,6 +52,7 @@ struct RageTab
             .preview = {},
             .name = "Minimum Damage##rage",
             .itemType = ITEM_SLIDER_INT,
+            .itemsList = {},
         },
         .min = 0,
         .max = 100,
@@ -63,12 +66,12 @@ struct RageTab
             .preview = {},
             .name = "Target Selection##rage",
             .itemType = ITEM_COMBOBOX,
-        },
-        .itemsList = {
-            "Lowest Health",
-            "Closest To Crosshair",
-            "Best Damage",
-            "FOV",
+            .itemsList = {
+                "Lowest Health",
+                "Closest To Crosshair",
+                "Best Damage",
+                "FOV",
+            }
         },
     };
 
@@ -80,15 +83,15 @@ struct RageTab
             .preview = {},
             .name = "Hitboxes##rage",
             .itemType = ITEM_MULTICOMBOBOX,
-        },
-        .itemsList = {
-            "Head",
-            "Neck",
-            "Chest",
-            "Stomach",
-            "Pelvis",
-            "Legs",
-            "Feet"
+            .itemsList = {
+                "Head",
+                "Neck",
+                "Chest",
+                "Stomach",
+                "Pelvis",
+                "Legs",
+                "Feet"
+            },
         },
     };
 
@@ -100,6 +103,7 @@ struct RageTab
             .preview = {},
             .name = "Randomize##rage",
             .itemType = ITEM_SLIDER_FLOAT,
+            .itemsList = {},
         },
         .min = 0.f,
         .max = 100.f,
@@ -113,6 +117,7 @@ struct RageTab
             .preview = {},
             .name = "Aim Hitbox Color##rage",
             .itemType = ITEM_COLOR,
+            .itemsList = {},
         },
     };
 };
@@ -131,6 +136,7 @@ struct Menu
 extern void init();
 extern void destroy();
 
+extern void renderBindsDebugWindow();
 extern void renderMainUI();
 
 extern Menu& getMenuInstance();

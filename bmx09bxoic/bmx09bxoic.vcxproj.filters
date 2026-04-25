@@ -54,5 +54,6 @@
     <ClInclude Include="gui\item.h" />
     <ClInclude Include="utils\uuid.h" />
     <ClInclude Include="config\config.h" />
+    <ClInclude Include="guiItems\checkbox.h" />
   </ItemGroup>
 </Project>

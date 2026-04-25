@@ -16,11 +16,18 @@ namespace gui
 using namespace binds;
 using namespace items;
 
-struct Menu
+struct RageTab
 {
-    ItemOldValue<bool> openedOldValue{};
-    bool opened = false;
-    bool newOpened = true;
+    CheckBox enable{
+        .item = {
+            .oldValue = {},
+            .value = false,
+            .binds = {},
+            .preview = {},
+            .name = "Enable##rage",
+            .itemType = ITEM_CHECKBOX,
+        }
+    };
 
     Slider<int> hitChance{
         .item = {
@@ -47,6 +54,15 @@ struct Menu
         .min = 0,
         .max = 100,
     };
+};
+
+struct Menu
+{
+    ItemOldValue<bool> openedOldValue{};
+    bool opened = false;
+    bool newOpened = true;
+
+    RageTab rage;
 
     KeyBindManager keyBindManager{};
 };

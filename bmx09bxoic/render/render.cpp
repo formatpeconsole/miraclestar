@@ -119,8 +119,9 @@ void onRender(IDXGISwapChain* pSwapChain)
             ImGui::Begin("hi", &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
             {
                 using namespace gui::items;
-                slider::render(getMenuInstance().hitChance);
-                slider::render(getMenuInstance().minDamage);
+                checkbox::render(getMenuInstance().rage.enable);
+                slider::render(getMenuInstance().rage.hitChance);
+                slider::render(getMenuInstance().rage.minDamage);
 
                 if (ImGui::SmallButton("Save"))
                     config::saveConfig();

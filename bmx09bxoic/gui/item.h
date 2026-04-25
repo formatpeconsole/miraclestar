@@ -54,4 +54,9 @@ struct Slider
     T min{};
     T max{};
 };
+
+struct CheckBox
+{
+    Item<bool> item{};
+};
 }

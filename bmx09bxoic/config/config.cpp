@@ -7,6 +7,9 @@
 #include "../gui/gui.h"
 #include "../utils/uuid.h"
 
+#define SAVE_ITEM(section, element) addItem(section[getItemName(element.item)], element.item);
+#define LOAD_ITEM(section, element) loadItem(section[getItemName(element.item)], element.item);
+
 namespace config
 {
 using namespace gui;
@@ -61,9 +64,9 @@ std::string readFile(std::string fileName)
 }
 
 template<typename T>
-std::string getSliderName(const Slider<T>& slider)
+std::string getItemName(const Item<T>& item)
 {
-    return getItemType(slider.item.itemType) + "-" + slider.item.name;
+    return getItemType(item.itemType) + "-" + item.name;
 }
 
 template<typename T>
@@ -104,6 +107,9 @@ void addItem(nlohmann::json& jsonToWrite, const Item<T>& item)
 template<typename T>
 void loadItem(nlohmann::json& jsonResult, Item<T>& item)
 {
+    if (jsonResult.empty())
+        return;
+
     item.value = jsonResult["value"].get<T>();
 
     item.preview.erased = false;
@@ -145,9 +151,11 @@ void loadConfig()
     instance.keyBindManager.eraseAllBinds();
 
     auto& rageSection = jsonResult["Rage"];
+    if (!rageSection.empty())
     {
-        loadItem(rageSection[getSliderName(instance.hitChance)], instance.hitChance.item);
-        loadItem(rageSection[getSliderName(instance.minDamage)], instance.minDamage.item);
+        LOAD_ITEM(rageSection, instance.rage.enable);
+        LOAD_ITEM(rageSection, instance.rage.hitChance);
+        LOAD_ITEM(rageSection, instance.rage.minDamage);
     }
 }
 
@@ -160,8 +168,9 @@ void saveConfig()
     auto& instance = getMenuInstance();
     auto& rageSection = jsonToWrite["Rage"];
     {
-        addItem(rageSection[getSliderName(instance.hitChance)], instance.hitChance.item);
-        addItem(rageSection[getSliderName(instance.minDamage)], instance.minDamage.item);
+        SAVE_ITEM(rageSection, instance.rage.enable);
+        SAVE_ITEM(rageSection, instance.rage.hitChance);
+        SAVE_ITEM(rageSection, instance.rage.minDamage);
     }
 
     configFile << jsonToWrite;

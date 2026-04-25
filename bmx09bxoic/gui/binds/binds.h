@@ -620,6 +620,9 @@ void renderDebugBindsWindow();
 WPARAM ImGui_ImplWin32_ImGuiKeyToKeyEvent(ImGuiKey imgui_key);
 std::string ImGui_ImplWin32_VKeyToString(int wParam);
 
+std::string getItemType(int type);
+std::string getBindMode(int mode);
+
 template<typename T>
 void keyBind(const std::shared_ptr<IKeyBind> bind, typename T::iterator it)
 {

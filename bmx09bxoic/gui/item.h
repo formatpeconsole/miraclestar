@@ -17,9 +17,10 @@ template<typename T>
 struct BindValues
 {
     T value = {};
-    int bindMode = 0;
+    int bindMode = -1;
     int bindKey = 0;
     std::string name{};
+    std::string previewName{"New bind"};
     std::string lastKey{};
     std::string label{ "Press any key" };
     bool keyEmpty = false;

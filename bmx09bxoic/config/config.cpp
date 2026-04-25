@@ -14,46 +14,6 @@ namespace config
 {
 using namespace gui;
 
-inline std::string getItemType(int type)
-{
-    switch (type)
-    {
-    case ITEM_CHECKBOX:
-        return "Checkbox";
-    case ITEM_SLIDER_INT:
-        return "Slider<int>";
-    case ITEM_SLIDER_FLOAT:
-        return "Slider<float>";
-    case ITEM_COMBOBOX:
-        return "ComboBox";
-    case ITEM_MULTICOMBOBOX:
-        return "MultiComboBox";
-    case ITEM_COLOR:
-        return "Color";
-    default:
-        return "";
-    }
-}
-
-inline std::string getBindMode(int mode)
-{
-    switch (mode)
-    {
-    case BIND_ALWAYS_ON:
-        return "Always On";
-    case BIND_HOLD:
-        return "Hold";
-    case BIND_TOGGLE:
-        return "Toggle";
-    case BIND_RELEASE:
-        return "Release";
-    case BIND_FORCE_OFF:
-        return "Force Off";
-    default:
-        return "";
-    }
-}
-
 std::string readFile(std::string fileName)
 {
     std::ifstream file(fileName);
@@ -88,7 +48,7 @@ void addItem(nlohmann::json& jsonToWrite, const Item<T>& item)
     }
 
     itemJson["value"] = valueToRead;
-    itemJson["itemType"] = getItemType(item.itemType);
+    itemJson["itemType"] = binds::getItemType(item.itemType);
     itemJson["binds"] = nlohmann::json::array();
     for (auto& i : item.binds)
     {
@@ -98,7 +58,7 @@ void addItem(nlohmann::json& jsonToWrite, const Item<T>& item)
         bindJson["name"] = i.name;
         bindJson["value"] = i.value;
         bindJson["bindMode"] = i.bindMode;
-        bindJson["bindModeName"] = getBindMode(i.bindMode + 1);
+        bindJson["bindModeName"] = binds::getBindMode(i.bindMode + 1);
         bindJson["bindKey"] = i.bindKey;
         itemJson["binds"].push_back(bindJson);
     }
@@ -128,7 +88,7 @@ void loadItem(nlohmann::json& jsonResult, Item<T>& item)
         newBind.bindMode = bind["bindMode"].get<int>();
         newBind.bindKey = bind["bindKey"].get<int>();
         newBind.keyEmpty = false;
-        newBind.label = ImGui_ImplWin32_VKeyToString(newBind.bindKey);
+        newBind.label = binds::ImGui_ImplWin32_VKeyToString(newBind.bindKey);
 
         getMenuInstance().keyBindManager.addBind(
             &item.value,

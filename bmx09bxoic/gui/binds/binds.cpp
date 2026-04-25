@@ -525,4 +525,44 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
         break;
     }
 }
+
+std::string getItemType(int type)
+{
+    switch (type)
+    {
+    case ITEM_CHECKBOX:
+        return "Checkbox";
+    case ITEM_SLIDER_INT:
+        return "Slider<int>";
+    case ITEM_SLIDER_FLOAT:
+        return "Slider<float>";
+    case ITEM_COMBOBOX:
+        return "ComboBox";
+    case ITEM_MULTICOMBOBOX:
+        return "MultiComboBox";
+    case ITEM_COLOR:
+        return "Color";
+    default:
+        return "";
+    }
+}
+
+std::string getBindMode(int mode)
+{
+    switch (mode)
+    {
+    case BIND_ALWAYS_ON:
+        return "Always On";
+    case BIND_HOLD:
+        return "Hold";
+    case BIND_TOGGLE:
+        return "Toggle";
+    case BIND_RELEASE:
+        return "Release";
+    case BIND_FORCE_OFF:
+        return "Force Off";
+    default:
+        return "";
+    }
+}
 }

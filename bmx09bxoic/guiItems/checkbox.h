@@ -65,7 +65,7 @@ inline void render(CheckBox& checkbox)
         {
             if (preview.selectedBind.has_value()
                 && preview.selectedBind.value() != item.binds.end())
-                preview.label = preview.selectedBind.value()->name;
+                preview.label = preview.selectedBind.value()->previewName;
         }
 
         if (ImGui::BeginCombo(bindCombo.c_str(), preview.label.c_str()))
@@ -94,7 +94,16 @@ inline void render(CheckBox& checkbox)
                         preview.erased = false;
                     }
 
-                    if (ImGui::Selectable(it->name.c_str(), preview.selection == bindsIter, 0, ImVec2(100, 15)))
+                    it->previewName = "New Bind ##" + it->name;
+                    if (it->bindKey > 0 && it->bindMode != -1)
+                    {
+                        it->previewName =
+                            binds::ImGui_ImplWin32_VKeyToString(it->bindKey)
+                            + " - "
+                            + binds::getBindMode(it->bindMode + 1);
+                    }
+
+                    if (ImGui::Selectable(it->previewName.c_str(), preview.selection == bindsIter, 0, ImVec2(100, 15)))
                     {
                         preview.selection = bindsIter;
                         preview.selectedBind = it;
@@ -136,7 +145,6 @@ inline void render(CheckBox& checkbox)
         if (preview.selectedBind.has_value())
         {
             auto& value = preview.selectedBind.value();
-
             std::string valueName = "Value ##" + value->name;
             std::string bindType = "##bind-type-to" + value->name;
 
@@ -151,6 +159,15 @@ inline void render(CheckBox& checkbox)
                 ImGui::Text("Current Key");
                 ImGui::SameLine();
                 gui::binds::keyBind<std::list<BindValues<bool>>>(currentBind, value);
+            }
+
+            value->previewName = "New Bind ##" + value->name;
+            if (value->bindKey > 0 && value->bindMode != -1)
+            {
+                value->previewName =
+                    binds::ImGui_ImplWin32_VKeyToString(value->bindKey)
+                    + " - "
+                    + binds::getBindMode(value->bindMode + 1);
             }
 
             ImGui::Checkbox(valueName.c_str(), &value->value);

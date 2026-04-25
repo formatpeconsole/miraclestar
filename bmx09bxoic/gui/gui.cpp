@@ -21,7 +21,9 @@ void renderMainUI()
     if (getMenuInstance().opened)
     {
         ImGui::SetNextWindowSize(ImVec2(780, 650));
-        ImGui::Begin("hi", &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
+
+        std::string windowTitle = "BMX09BXOIC - " + std::string(__DATE__);
+        ImGui::Begin(windowTitle.c_str(), &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
         {
             using namespace gui::items;
             checkbox::render(getMenuInstance().rage.enable);

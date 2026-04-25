@@ -28,8 +28,7 @@ inline void addMultiComboBoxBind(MultiComboBox& multiComboBox)
         item.itemType,
         0,
         newBind.name,
-        multiComboBox.item.name,
-        multiComboBox.item.itemsList
+        multiComboBox.item.name
     );
 }
 

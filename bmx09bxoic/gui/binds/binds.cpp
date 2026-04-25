@@ -14,7 +14,6 @@ void initBinds()
         ITEM_UI_OPEN,
         VK_INSERT,
         {},
-        {},
         {}
     );
 

@@ -30,8 +30,7 @@ inline void addColorPickerBind(ColorPicker& colorPicker)
         item.itemType,
         0,
         newBind.name,
-        colorPicker.item.name,
-        {}
+        colorPicker.item.name
     );
 }
 

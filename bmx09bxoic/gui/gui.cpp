@@ -16,6 +16,48 @@ void destroy()
     binds::destroyBinds();
 }
 
+void* getItemValuePointerFromItemPointer(void* ptr, int type)
+{
+    switch (type)
+    {
+    case ITEM_CHECKBOX:
+        return &reinterpret_cast<Item<bool>*>(ptr)->value;
+    case ITEM_SLIDER_INT:
+        return &reinterpret_cast<Item<int>*>(ptr)->value;
+    case ITEM_SLIDER_FLOAT:
+        return &reinterpret_cast<Item<float>*>(ptr)->value;
+    case ITEM_COMBOBOX:
+        return &reinterpret_cast<Item<int>*>(ptr)->value;
+    case ITEM_MULTICOMBOBOX:
+        return &reinterpret_cast<Item<unsigned int>*>(ptr)->value;
+    case ITEM_COLOR:
+        return &reinterpret_cast<Item<unsigned int>*>(ptr)->value;
+    default:
+        return {};
+    }
+}
+
+std::optional<std::vector<std::string>> getItemList(void* ptr, int type)
+{
+    switch (type)
+    {
+    case ITEM_COMBOBOX:
+    {
+        auto item = reinterpret_cast<Item<int>*>(ptr);
+        return item->itemsList;
+    }
+    break;
+    case ITEM_MULTICOMBOBOX:
+    {
+        auto item = reinterpret_cast<Item<unsigned int>*>(ptr);
+        return item->itemsList;
+    }
+    break;
+    default:
+        return {};
+    }
+}
+
 std::string GetFormattedText(const std::string& text)
 {
     size_t pos = text.find("##");
@@ -95,11 +137,20 @@ void renderBindsDebugWindow()
         ImGui::Text("Active binds:");
         ImGui::Separator();
 
+        auto& allItems = getMenuInstance().items;
         auto& binds = getMenuInstance().keyBindManager.getBindList();
         for (auto it = binds.begin(); it != binds.end(); ++it)
         {
-            const auto& item = (*it);
+            auto item = (*it);
             if (item->getItemType() == ITEM_UI_OPEN)
+                continue;
+
+            auto foundItem = std::find_if(allItems.begin(), allItems.end(), [item](const std::pair<void*, int>& pair) {
+                return getItemValuePointerFromItemPointer(pair.first, pair.second) == item->getItemPtr()
+                    && pair.second == item->getItemType();
+            });
+
+            if (foundItem == allItems.end())
                 continue;
 
             bool isActive = item->getType() == BIND_RELEASE ? !item->getPressed() : item->getPressed();
@@ -108,7 +159,7 @@ void renderBindsDebugWindow()
                 std::string bindValue = GetCorrectBindValue(
                     item->getBindValue(), 
                     item->getItemType(),
-                    item->getSelectionList());
+                    getItemList(foundItem->first, foundItem->second));
 
                 // [+] ItemName -> Value (BindMode)
                 std::string infoBegin = "[+] " + item->getItemName();

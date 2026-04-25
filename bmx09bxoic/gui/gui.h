@@ -6,6 +6,7 @@
 #include <optional>
 #include <algorithm>
 #include <unordered_map>
+#include <any>
 
 #include "../render/render.h"
 #include "binds/binds.h"
@@ -129,6 +130,16 @@ struct Menu
     bool newOpened = true;
 
     RageTab rage;
+
+    std::vector<std::pair<void*, int>> items{
+        { static_cast<void*>(&rage.enable.item), rage.enable.item.itemType },
+        { static_cast<void*>(&rage.hitChance.item), rage.hitChance.item.itemType },
+        { static_cast<void*>(&rage.minDamage.item), rage.minDamage.item.itemType },
+        { static_cast<void*>(&rage.targetSelection.item), rage.targetSelection.item.itemType },
+        { static_cast<void*>(&rage.hitBoxes.item), rage.hitBoxes.item.itemType },
+        { static_cast<void*>(&rage.aimRandomize.item), rage.aimRandomize.item.itemType },
+        { static_cast<void*>(&rage.aimHitboxColor.item), rage.aimHitboxColor.item.itemType },
+    };
 
     KeyBindManager keyBindManager{};
 };

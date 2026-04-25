@@ -99,8 +99,6 @@ public:
     virtual std::string getBindName() = 0;
     virtual std::string getBindValue() = 0;
 
-    virtual std::vector<std::string> getSelectionList() = 0;
-
     virtual ~IKeyBind() = default;
 };
 
@@ -110,8 +108,7 @@ class KeyBind : public IKeyBind
 public:
     KeyBind(T* item, T* bind, ItemOldValue<T>* oldValue, 
             int type, int itemType, int key, 
-            std::string name, std::string itemName,
-            std::vector<std::string> selectionList)
+            std::string name, std::string itemName)
         : itemPtr(item),
             bindItemPtr(bind),
             oldValue(oldValue),
@@ -119,8 +116,7 @@ public:
             itemType(itemType),
             key(key),
             name(name),
-            itemName(itemName),
-            selectionList(selectionList) {}
+            itemName(itemName){}
 
     int getType() override
     {
@@ -155,11 +151,6 @@ public:
     std::string getBindValue() override
     {
         return bindValue;
-    }
-
-    std::vector<std::string> getSelectionList() override
-    {
-        return selectionList;
     }
 
     void* getItemPtr() override
@@ -276,8 +267,6 @@ private:
     std::string name{};
     std::string itemName{};
     std::string bindValue{};
-
-    std::vector<std::string> selectionList{};
 };
 
 struct UiBlock
@@ -306,15 +295,13 @@ public:
     template<typename T>    
     void addBind(T* ptr, T* bindPtr, ItemOldValue<T>* oldValue, 
         int type, int itemType, int key, 
-        std::string name, std::string itemName,
-        std::vector<std::string> selectionList)
+        std::string name, std::string itemName)
     {
         std::string bindName = name + uuid::getUuid();
 
         std::shared_ptr<IKeyBind> bind = std::make_shared<KeyBind<T>>(ptr, bindPtr, oldValue,
             type, itemType, key,
-            bindName, itemName,
-            selectionList);
+            bindName, itemName);
 
         bind->setOldValue(); 
         keyBinds.emplace_back(bind);

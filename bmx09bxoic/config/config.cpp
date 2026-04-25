@@ -99,8 +99,7 @@ void loadItem(nlohmann::json& jsonResult, Item<T>& item)
             item.itemType,
             newBind.bindKey,
             newBind.name,
-            item.name,
-            item.itemsList
+            item.name
         );
     }
 }

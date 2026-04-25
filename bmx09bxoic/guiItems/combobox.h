@@ -28,8 +28,7 @@ inline void addComboBoxBind(ComboBox& comboBox)
         item.itemType,
         0,
         newBind.name,
-        comboBox.item.name,
-        comboBox.item.itemsList
+        comboBox.item.name
     );
 }
 

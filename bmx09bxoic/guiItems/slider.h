@@ -29,8 +29,7 @@ inline void addSliderBind(Slider<T>& slider)
         item.itemType,
         0,
         newBind.name,
-        slider.item.name,
-        {}
+        slider.item.name
     );
 }
 

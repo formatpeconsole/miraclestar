@@ -59,4 +59,11 @@ struct CheckBox
 {
     Item<bool> item{};
 };
+
+struct ComboBox
+{
+    Item<int> item{};
+
+    std::vector<std::string> items{};
+};
 }

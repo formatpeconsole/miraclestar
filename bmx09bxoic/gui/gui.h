@@ -54,6 +54,23 @@ struct RageTab
         .min = 0,
         .max = 100,
     };
+
+    ComboBox targetSelection{
+        .item = {
+            .oldValue = {},
+            .value = 0,
+            .binds = {},
+            .preview = {},
+            .name = "Target Selection##rage",
+            .itemType = ITEM_COMBOBOX,
+        },
+        .items = {
+            "Lowest Health",
+            "Closest To Crosshair",
+            "Best Damage",
+            "FOV",
+        },
+    };
 };
 
 struct Menu

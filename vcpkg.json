@@ -4,6 +4,7 @@
     "freetype",
     "lunasvg",
     "nlohmann-json",
-    "plutosvg"
+    "plutosvg",
+    "minhook"
   ]
 }

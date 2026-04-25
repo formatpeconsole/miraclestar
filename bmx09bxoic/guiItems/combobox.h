@@ -10,14 +10,13 @@
 #include "../gui/item.h"
 #include "../gui/gui.h"
 
-namespace gui::items::slider
+namespace gui::items::combobox
 {
-template<typename T>
-inline void addSliderBind(Slider<T>& slider)
+inline void addComboBoxBind(ComboBox& comboBox)
 {
-    auto& item = slider.item;
+    auto& item = comboBox.item;
     auto& newBind = item.binds.emplace_back();
-    newBind.name = "SliderBind-For " + item.name + " " + uuid::getUuid();
+    newBind.name = "ComboBoxBind-For " + item.name + " " + uuid::getUuid();
 
     getMenuInstance().keyBindManager.addBind(
         &item.value,
@@ -30,26 +29,35 @@ inline void addSliderBind(Slider<T>& slider)
     );
 }
 
-template<typename T>
-inline decltype(&addSliderBind<T>) bindCallback = addSliderBind<T>;
+inline decltype(&addComboBoxBind) comboBoxBindCallback = addComboBoxBind;
 
-template<typename T>
-inline void render(Slider<T>& slider)
+inline std::string getComboItemsList(ComboBox& comboBox)
 {
-    auto& item = slider.item;
+    std::string itemsList{};
+    for (const auto& item : comboBox.items)
+    {
+        itemsList += item + '\0';
+    }
+    itemsList += '\0';
+    return itemsList;
+}
+
+inline void render(ComboBox& comboBox)
+{
+    auto& item = comboBox.item;
 
     std::string itemKey = std::to_string(reinterpret_cast<uintptr_t>(&item));
     std::string itemValueKey = std::to_string(reinterpret_cast<uintptr_t>(&item.value));
 
-    std::string bindItemPopup = "bind-popup-slider##" + itemKey;
+    std::string bindItemPopup = "bind-popup-comboBox##" + itemKey;
     std::string bindCombo = "##binds-for-" + itemValueKey;
 
     std::string bindAdd = "+##bind-add-for-" + itemKey;
 
     std::string bindOpenPopup = "* ##" + itemKey;
 
-    ImGui::SliderInt(item.name.c_str(), &item.value, slider.min, slider.max);
-    item.value = std::clamp(item.value, slider.min, slider.max);
+    ImGui::Combo(item.name.c_str(), &item.value, getComboItemsList(comboBox).c_str());
+    item.value = std::clamp(item.value, 0, static_cast<int>(comboBox.items.size()) - 1);
 
     ImGui::SameLine();
     if (ImGui::SmallButton(bindOpenPopup.c_str()))
@@ -80,7 +88,7 @@ inline void render(Slider<T>& slider)
 
                 if (ImGui::SmallButton(bindAdd.c_str()))
                 {
-                    bindCallback<T>(slider);
+                    comboBoxBindCallback(comboBox);
 
                     preview.selection = 0;
                     preview.selectedBind.reset();
@@ -112,7 +120,7 @@ inline void render(Slider<T>& slider)
 
                     if (ImGui::SmallButton(bindPlus.c_str()))
                     {
-                        bindCallback<T>(slider);
+                        comboBoxBindCallback(comboBox);
                         preview.selectedBind.reset();
                         preview.selection = bindsIter;
                         continue;
@@ -154,11 +162,11 @@ inline void render(Slider<T>& slider)
 
                 ImGui::Text("Current Key");
                 ImGui::SameLine();
-                gui::binds::keyBind<std::list<BindValues<T>>>(currentBind, value);
+                gui::binds::keyBind<std::list<BindValues<int>>>(currentBind, value);
             }
 
-            ImGui::SliderInt(valueName.c_str(), &value->value, slider.min, slider.max);
-            value->value = std::clamp(value->value, slider.min, slider.max);
+            ImGui::Combo(valueName.c_str(), &value->value, getComboItemsList(comboBox).c_str());
+            value->value = std::clamp(value->value, 0, static_cast<int>(comboBox.items.size()) - 1);
         }
 
         ImGui::EndPopup();

@@ -120,6 +120,7 @@ void onRender(IDXGISwapChain* pSwapChain)
             {
                 using namespace gui::items;
                 checkbox::render(getMenuInstance().rage.enable);
+                combobox::render(getMenuInstance().rage.targetSelection);
                 slider::render(getMenuInstance().rage.hitChance);
                 slider::render(getMenuInstance().rage.minDamage);
 

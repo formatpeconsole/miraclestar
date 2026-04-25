@@ -31,15 +31,10 @@ inline void addComboBoxBind(ComboBox& comboBox)
 
 inline decltype(&addComboBoxBind) comboBoxBindCallback = addComboBoxBind;
 
-inline std::string getComboItemsList(ComboBox& comboBox)
+inline const char* Items_VectorGetter(void* data, int idx)
 {
-    std::string itemsList{};
-    for (const auto& item : comboBox.items)
-    {
-        itemsList += item + '\0';
-    }
-    itemsList += '\0';
-    return itemsList;
+    auto items = reinterpret_cast<std::string*>(data);
+    return items[idx].c_str();
 }
 
 inline void render(ComboBox& comboBox)
@@ -56,8 +51,9 @@ inline void render(ComboBox& comboBox)
 
     std::string bindOpenPopup = "* ##" + itemKey;
 
-    ImGui::Combo(item.name.c_str(), &item.value, getComboItemsList(comboBox).c_str());
-    item.value = std::clamp(item.value, 0, static_cast<int>(comboBox.items.size()) - 1);
+    auto comboSize = static_cast<int>(comboBox.itemsList.size());
+    ImGui::Combo(item.name.c_str(), &item.value, Items_VectorGetter, comboBox.itemsList.data(), comboSize);
+    item.value = std::clamp(item.value, 0, comboSize - 1);
 
     ImGui::SameLine();
     if (ImGui::SmallButton(bindOpenPopup.c_str()))
@@ -165,8 +161,9 @@ inline void render(ComboBox& comboBox)
                 gui::binds::keyBind<std::list<BindValues<int>>>(currentBind, value);
             }
 
-            ImGui::Combo(valueName.c_str(), &value->value, getComboItemsList(comboBox).c_str());
-            value->value = std::clamp(value->value, 0, static_cast<int>(comboBox.items.size()) - 1);
+            auto comboSize = static_cast<int>(comboBox.itemsList.size());
+            ImGui::Combo(valueName.c_str(), &value->value, Items_VectorGetter, comboBox.itemsList.data(), static_cast<int>(comboBox.itemsList.size()));
+            item.value = std::clamp(item.value, 0, comboSize - 1);
         }
 
         ImGui::EndPopup();

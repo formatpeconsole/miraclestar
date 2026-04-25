@@ -107,17 +107,17 @@ void addItem(nlohmann::json& jsonToWrite, const Item<T>& item)
 template<typename T>
 void loadItem(nlohmann::json& jsonResult, Item<T>& item)
 {
-    if (jsonResult.empty())
-        return;
-
-    item.value = jsonResult["value"].get<T>();
-
     item.preview.erased = false;
     item.preview.selection = false;
     item.preview.selectedBind.reset();
     item.preview.label = "No binds.";
 
     item.binds.clear();
+
+    if (jsonResult.empty())
+        return;
+
+    item.value = jsonResult["value"].get<T>();
 
     auto& bindsSection = jsonResult["binds"];
     for (auto& bind : bindsSection)

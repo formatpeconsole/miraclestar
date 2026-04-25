@@ -64,7 +64,7 @@ struct RageTab
             .name = "Target Selection##rage",
             .itemType = ITEM_COMBOBOX,
         },
-        .items = {
+        .itemsList = {
             "Lowest Health",
             "Closest To Crosshair",
             "Best Damage",

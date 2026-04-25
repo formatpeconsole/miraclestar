@@ -63,7 +63,6 @@ struct CheckBox
 struct ComboBox
 {
     Item<int> item{};
-
-    std::vector<std::string> items{};
+    std::vector<std::string> itemsList{};
 };
 }

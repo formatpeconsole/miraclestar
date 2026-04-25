@@ -92,6 +92,19 @@ struct RageTab
         },
     };
 
+    Slider<float> aimRandomize{
+        .item = {
+            .oldValue = {},
+            .value = 0,
+            .binds = {},
+            .preview = {},
+            .name = "Randomize##rage",
+            .itemType = ITEM_SLIDER_FLOAT,
+        },
+        .min = 0.f,
+        .max = 100.f,
+    };
+
     ColorPicker aimHitboxColor{
          .item = {
             .oldValue = {},

@@ -9,6 +9,8 @@
 
 #include "../gui/item.h"
 #include "../gui/gui.h"
+#include "keybind.h"
+#include "utils.h"
 
 namespace gui::items::multicombobox
 {
@@ -65,24 +67,26 @@ inline void render(MultiComboBox& multiComboBox)
 
     std::string bindOpenPopup = "* ##" + itemKey;
 
-    auto comboSize = static_cast<int>(multiComboBox.itemsList.size());
-
-    std::string preview = GetFlagPreview(item.value, multiComboBox.itemsList);
-    if (ImGui::BeginCombo(item.name.c_str(), preview.c_str()))
     {
-        for (int i = 0; i < comboSize; ++i)
-        {
-            const auto step = 1 << i;
-            if (ImGui::Selectable(multiComboBox.itemsList[i].c_str(), (item.value & step), ImGuiSelectableFlags_DontClosePopups))
-            {
-                if ((item.value & step))
-                    item.value &= ~step;
-                else
-                    item.value |= step;
-            }
-        }
+        auto comboSize = static_cast<int>(multiComboBox.itemsList.size());
 
-        ImGui::EndCombo();
+        std::string preview = GetFlagPreview(item.value, multiComboBox.itemsList);
+        if (ImGui::BeginCombo(item.name.c_str(), preview.c_str()))
+        {
+            for (int i = 0; i < comboSize; ++i)
+            {
+                const auto step = 1 << i;
+                if (ImGui::Selectable(multiComboBox.itemsList[i].c_str(), (item.value & step), ImGuiSelectableFlags_DontClosePopups))
+                {
+                    if ((item.value & step))
+                        item.value &= ~step;
+                    else
+                        item.value |= step;
+                }
+            }
+
+            ImGui::EndCombo();
+        }
     }
 
     ImGui::SameLine();
@@ -96,15 +100,7 @@ inline void render(MultiComboBox& multiComboBox)
         ImGui::Text("Binds");
 
         auto& preview = item.preview;
-
-        if (item.binds.empty())
-            preview.label = "No binds.";
-        else
-        {
-            if (preview.selectedBind.has_value()
-                && preview.selectedBind.value() != item.binds.end())
-                preview.label = preview.selectedBind.value()->previewName;
-        }
+        preview.label = getBindsComboLabel(item, item.preview);
 
         if (ImGui::BeginCombo(bindCombo.c_str(), preview.label.c_str()))
         {
@@ -132,15 +128,7 @@ inline void render(MultiComboBox& multiComboBox)
                         preview.erased = false;
                     }
 
-                    it->previewName = "New Bind ##" + it->name;
-                    if (it->bindKey > 0 && it->bindMode != -1)
-                    {
-                        it->previewName =
-                            binds::ImGui_ImplWin32_VKeyToString(it->bindKey)
-                            + " - "
-                            + binds::getBindMode(it->bindMode + 1);
-                    }
-
+                    it->previewName = getPreviewItemName(*it);
                     if (ImGui::Selectable(it->previewName.c_str(), preview.selection == bindsIter, 0, ImVec2(100, 15)))
                     {
                         preview.selection = bindsIter;
@@ -196,34 +184,31 @@ inline void render(MultiComboBox& multiComboBox)
 
                 ImGui::Text("Current Key");
                 ImGui::SameLine();
-                gui::binds::keyBind<std::list<BindValues<unsigned int>>>(currentBind, value);
+                keybind::keyBindSelector<std::list<BindValues<unsigned int>>>(currentBind, value);
             }
 
-            value->previewName = "New Bind ##" + value->name;
-            if (value->bindKey > 0 && value->bindMode != -1)
-            {
-                value->previewName =
-                    binds::ImGui_ImplWin32_VKeyToString(value->bindKey)
-                    + " - "
-                    + binds::getBindMode(value->bindMode + 1);
-            }
+            value->previewName = getPreviewItemName(*value);
 
-            std::string preview = GetFlagPreview(value->value, multiComboBox.itemsList);
-            if (ImGui::BeginCombo(valueName.c_str(), preview.c_str()))
             {
-                for (int i = 0; i < comboSize; ++i)
+                auto comboSize = static_cast<int>(multiComboBox.itemsList.size());
+
+                std::string preview = GetFlagPreview(value->value, multiComboBox.itemsList);
+                if (ImGui::BeginCombo(valueName.c_str(), preview.c_str()))
                 {
-                    const auto step = 1 << i;
-                    if (ImGui::Selectable(multiComboBox.itemsList[i].c_str(), (value->value & step), ImGuiSelectableFlags_DontClosePopups))
+                    for (int i = 0; i < comboSize; ++i)
                     {
-                        if ((value->value & step))
-                            value->value &= ~step;
-                        else
-                            value->value |= step;
+                        const auto step = 1 << i;
+                        if (ImGui::Selectable(multiComboBox.itemsList[i].c_str(), (value->value & step), ImGuiSelectableFlags_DontClosePopups))
+                        {
+                            if ((value->value & step))
+                                value->value &= ~step;
+                            else
+                                value->value |= step;
+                        }
                     }
-                }
 
-                ImGui::EndCombo();
+                    ImGui::EndCombo();
+                }
             }
         }
 

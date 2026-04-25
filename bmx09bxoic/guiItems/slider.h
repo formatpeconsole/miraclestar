@@ -9,6 +9,8 @@
 
 #include "../gui/item.h"
 #include "../gui/gui.h"
+#include "keybind.h"
+#include "utils.h"
 
 namespace gui::items::slider
 {
@@ -48,8 +50,20 @@ inline void render(Slider<T>& slider)
 
     std::string bindOpenPopup = "* ##" + itemKey;
 
-    ImGui::SliderInt(item.name.c_str(), &item.value, slider.min, slider.max);
-    item.value = std::clamp(item.value, slider.min, slider.max);
+    if constexpr (std::is_same<T, float>::value)
+    {
+        ImGui::SliderFloat(item.name.c_str(), &item.value, slider.min, slider.max);
+        item.value = std::clamp(item.value, slider.min, slider.max);
+    }
+    else if constexpr (std::is_same<T, int>::value)
+    {
+        ImGui::SliderInt(item.name.c_str(), &item.value, slider.min, slider.max);
+        item.value = std::clamp(item.value, slider.min, slider.max);
+    }
+    else
+    {
+        static_assert(false, "Unsupported slider type");
+    }
 
     ImGui::SameLine();
     if (ImGui::SmallButton(bindOpenPopup.c_str()))
@@ -62,15 +76,7 @@ inline void render(Slider<T>& slider)
         ImGui::Text("Binds");
 
         auto& preview = item.preview;
-
-        if (item.binds.empty())
-            preview.label = "No binds.";
-        else
-        {
-            if (preview.selectedBind.has_value()
-                && preview.selectedBind.value() != item.binds.end())
-                preview.label = preview.selectedBind.value()->previewName;
-        }
+        preview.label = getBindsComboLabel(item, item.preview);
 
         if (ImGui::BeginCombo(bindCombo.c_str(), preview.label.c_str()))
         {
@@ -98,15 +104,7 @@ inline void render(Slider<T>& slider)
                         preview.erased = false;
                     }
 
-                    it->previewName = "New Bind ##" + it->name;
-                    if (it->bindKey > 0 && it->bindMode != -1)
-                    {
-                        it->previewName =
-                            binds::ImGui_ImplWin32_VKeyToString(it->bindKey)
-                            + " - "
-                            + binds::getBindMode(it->bindMode + 1);
-                    }
-
+                    it->previewName = getPreviewItemName(*it);
                     if (ImGui::Selectable(it->previewName.c_str(), preview.selection == bindsIter, 0, ImVec2(100, 15)))
                     {
                         preview.selection = bindsIter;
@@ -163,20 +161,27 @@ inline void render(Slider<T>& slider)
 
                 ImGui::Text("Current Key");
                 ImGui::SameLine();
-                gui::binds::keyBind<std::list<BindValues<T>>>(currentBind, value);
+                keybind::keyBindSelector<std::list<BindValues<T>>>(currentBind, value);
             }
 
-            value->previewName = "New Bind ##" + value->name;
-            if (value->bindKey > 0 && value->bindMode != -1)
+            value->previewName = getPreviewItemName(*value);
+
             {
-                value->previewName =
-                    binds::ImGui_ImplWin32_VKeyToString(value->bindKey)
-                    + " - "
-                    + binds::getBindMode(value->bindMode + 1);
+                if constexpr (std::is_same<T, float>::value)
+                {
+                    ImGui::SliderFloat(valueName.c_str(), &value->value, slider.min, slider.max);
+                    value->value = std::clamp(value->value, slider.min, slider.max);
+                }
+                else if constexpr (std::is_same<T, int>::value)
+                {
+                    ImGui::SliderInt(valueName.c_str(), &value->value, slider.min, slider.max);
+                    value->value = std::clamp(value->value, slider.min, slider.max);
+                }
+                else
+                {
+                    static_assert(false, "Unsupported slider type");
+                }
             }
-
-            ImGui::SliderInt(valueName.c_str(), &value->value, slider.min, slider.max);
-            value->value = std::clamp(value->value, slider.min, slider.max);
         }
 
         ImGui::EndPopup();

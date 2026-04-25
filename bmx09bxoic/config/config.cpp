@@ -118,6 +118,7 @@ void loadConfig()
         LOAD_ITEM(rageSection, instance.rage.minDamage);
         LOAD_ITEM(rageSection, instance.rage.targetSelection);
         LOAD_ITEM(rageSection, instance.rage.hitBoxes);
+        LOAD_ITEM(rageSection, instance.rage.aimRandomize);
         LOAD_ITEM(rageSection, instance.rage.aimHitboxColor);
     }
 }
@@ -136,6 +137,7 @@ void saveConfig()
         SAVE_ITEM(rageSection, instance.rage.minDamage);
         SAVE_ITEM(rageSection, instance.rage.targetSelection);
         SAVE_ITEM(rageSection, instance.rage.hitBoxes);
+        SAVE_ITEM(rageSection, instance.rage.aimRandomize);
         SAVE_ITEM(rageSection, instance.rage.aimHitboxColor);
     }
 

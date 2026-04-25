@@ -194,29 +194,6 @@ void handleMainBinds(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 }
 
-std::string getBindType(int type)
-{
-    switch (type)
-    {
-    case BIND_ALWAYS_ON:
-        return "Always On";
-    case BIND_HOLD:
-        return "Hold";
-    case BIND_TOGGLE:
-        return "Toggle";
-    case BIND_RELEASE:
-        return "Release";
-    case BIND_FORCE_OFF:
-        return "Force Off";
-    }
-    return {};
-}
-
-void renderDebugBindsWindow()
-{
-  
-}
-
 WPARAM ImGui_ImplWin32_ImGuiKeyToKeyEvent(ImGuiKey imgui_key)
 {
     if (imgui_key == ImGuiKey_KeypadEnter)
@@ -353,12 +330,12 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
 {
     switch (wParam)
     {
-    case VK_LBUTTON: return "LButton";
-    case VK_RBUTTON: return "RButton";
+    case VK_LBUTTON: return "M1";
+    case VK_RBUTTON: return "M2";
     case VK_CANCEL: return "Cancel";
-    case VK_MBUTTON: return "MButton";
-    case VK_XBUTTON1: return "XButton1";
-    case VK_XBUTTON2: return "XButton2";
+    case VK_MBUTTON: return "M3";
+    case VK_XBUTTON1: return "M4";
+    case VK_XBUTTON2: return "M5";
     case VK_BACK: return "Backspace";
     case VK_TAB: return "Tab";
     case VK_CLEAR: return "Clear";
@@ -378,8 +355,8 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
     case VK_ACCEPT: return "Accept";
     case VK_MODECHANGE: return "ModeChange";
     case VK_SPACE: return "Space";
-    case VK_PRIOR: return "PageUp";
-    case VK_NEXT: return "PageDown";
+    case VK_PRIOR: return "PGUP";
+    case VK_NEXT: return "PGDOWN";
     case VK_END: return "End";
     case VK_HOME: return "Home";
     case VK_LEFT: return "Left";
@@ -397,22 +374,22 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
     case VK_RWIN: return "RightSuper";
     case VK_APPS: return "Menu";
     case VK_SLEEP: return "Sleep";
-    case VK_NUMPAD0: return "Keypad0";
-    case VK_NUMPAD1: return "Keypad1";
-    case VK_NUMPAD2: return "Keypad2";
-    case VK_NUMPAD3: return "Keypad3";
-    case VK_NUMPAD4: return "Keypad4";
-    case VK_NUMPAD5: return "Keypad5";
-    case VK_NUMPAD6: return "Keypad6";
-    case VK_NUMPAD7: return "Keypad7";
-    case VK_NUMPAD8: return "Keypad8";
-    case VK_NUMPAD9: return "Keypad9";
-    case VK_MULTIPLY: return "KeypadMultiply";
-    case VK_ADD: return "KeypadAdd";
-    case VK_SEPARATOR: return "Separator";
-    case VK_SUBTRACT: return "KeypadSubtract";
-    case VK_DECIMAL: return "KeypadDecimal";
-    case VK_DIVIDE: return "KeypadDivide";
+    case VK_NUMPAD0: return "Num 0";
+    case VK_NUMPAD1: return "Num 1";
+    case VK_NUMPAD2: return "Num 2";
+    case VK_NUMPAD3: return "Num 3";
+    case VK_NUMPAD4: return "Num 4";
+    case VK_NUMPAD5: return "Num 5";
+    case VK_NUMPAD6: return "Num 6";
+    case VK_NUMPAD7: return "Num 7";
+    case VK_NUMPAD8: return "Num 8";
+    case VK_NUMPAD9: return "Num 9";
+    case VK_MULTIPLY: return "Num *";
+    case VK_ADD: return "Num +";
+    case VK_SEPARATOR: return "Num -";
+    case VK_SUBTRACT: return "Num -";
+    case VK_DECIMAL: return "Num .";
+    case VK_DIVIDE: return "Num /";
     case VK_F1: return "F1";
     case VK_F2: return "F2";
     case VK_F3: return "F3";
@@ -464,18 +441,17 @@ std::string ImGui_ImplWin32_VKeyToString(int wParam)
     case VK_LAUNCH_APP1: return "LaunchApp1";
     case VK_LAUNCH_APP2: return "LaunchApp2";
 
-        // OEM клавиши (зависят от раскладки)
-    case VK_OEM_1: return "OEM_1";      // ;:/
-    case VK_OEM_PLUS: return "OEM_PLUS"; // =+
-    case VK_OEM_COMMA: return "OEM_COMMA"; // ,<
-    case VK_OEM_MINUS: return "OEM_MINUS"; // -_
-    case VK_OEM_PERIOD: return "OEM_PERIOD"; // .>
-    case VK_OEM_2: return "OEM_2";      // /?
-    case VK_OEM_3: return "OEM_3";      // `~
-    case VK_OEM_4: return "OEM_4";      // [{ 
-    case VK_OEM_5: return "OEM_5";      // \|
-    case VK_OEM_6: return "OEM_6";      // ]}
-    case VK_OEM_7: return "OEM_7";      // '"
+    case VK_OEM_1: return ";";      // ;:/
+    case VK_OEM_PLUS: return "+"; // =+
+    case VK_OEM_COMMA: return ","; // ,<
+    case VK_OEM_MINUS: return "-"; // -_
+    case VK_OEM_PERIOD: return "."; // .>
+    case VK_OEM_2: return "/";      // /?
+    case VK_OEM_3: return "`";      // `~
+    case VK_OEM_4: return "[";      // [{ 
+    case VK_OEM_5: return "|";      // \|
+    case VK_OEM_6: return "]";      // ]}
+    case VK_OEM_7: return "'";      // '"
     case VK_OEM_8: return "OEM_8";
     case VK_OEM_AX: return "OEM_AX";
     case VK_OEM_102: return "OEM_102";

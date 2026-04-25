@@ -9,6 +9,8 @@
 
 #include "../gui/item.h"
 #include "../gui/gui.h"
+#include "keybind.h"
+#include "utils.h"
 
 namespace gui::items::colorpicker
 {
@@ -47,9 +49,10 @@ inline void render(ColorPicker& colorPicker)
 
     std::string bindOpenPopup = "* ##" + itemKey;
 
-    ImVec4 col = ImGui::ColorConvertU32ToFloat4(item.value);
-    if (ImGui::ColorEdit4(item.name.c_str(), (float*)&col, ImGuiColorEditFlags_NoInputs)) {
-        item.value = ImGui::ColorConvertFloat4ToU32(col);
+    {
+        ImVec4 col = ImGui::ColorConvertU32ToFloat4(item.value);
+        if (ImGui::ColorEdit4(item.name.c_str(), (float*)&col, ImGuiColorEditFlags_NoInputs))
+            item.value = ImGui::ColorConvertFloat4ToU32(col);
     }
 
     ImGui::SameLine();
@@ -63,15 +66,7 @@ inline void render(ColorPicker& colorPicker)
         ImGui::Text("Binds");
 
         auto& preview = item.preview;
-
-        if (item.binds.empty())
-            preview.label = "No binds.";
-        else
-        {
-            if (preview.selectedBind.has_value()
-                && preview.selectedBind.value() != item.binds.end())
-                preview.label = preview.selectedBind.value()->previewName;
-        }
+        preview.label = getBindsComboLabel(item, item.preview);
 
         if (ImGui::BeginCombo(bindCombo.c_str(), preview.label.c_str()))
         {
@@ -99,15 +94,7 @@ inline void render(ColorPicker& colorPicker)
                         preview.erased = false;
                     }
 
-                    it->previewName = "New Bind ##" + it->name;
-                    if (it->bindKey > 0 && it->bindMode != -1)
-                    {
-                        it->previewName =
-                            binds::ImGui_ImplWin32_VKeyToString(it->bindKey)
-                            + " - "
-                            + binds::getBindMode(it->bindMode + 1);
-                    }
-
+                    it->previewName = getPreviewItemName(*it);
                     if (ImGui::Selectable(it->previewName.c_str(), preview.selection == bindsIter, 0, ImVec2(100, 15)))
                     {
                         preview.selection = bindsIter;
@@ -163,21 +150,14 @@ inline void render(ColorPicker& colorPicker)
 
                 ImGui::Text("Current Key");
                 ImGui::SameLine();
-                binds::keyBind<std::list<BindValues<unsigned int>>>(currentBind, value);
+                keybind::keyBindSelector<std::list<BindValues<unsigned int>>>(currentBind, value);
             }
 
-            value->previewName = "New Bind ##" + value->name;
-            if (value->bindKey > 0 && value->bindMode != -1)
+            value->previewName = getPreviewItemName(*value);
             {
-                value->previewName =
-                    binds::ImGui_ImplWin32_VKeyToString(value->bindKey)
-                    + " - "
-                    + binds::getBindMode(value->bindMode + 1);
-            }
-
-            ImVec4 col = ImGui::ColorConvertU32ToFloat4(value->value);
-            if (ImGui::ColorEdit4(valueName.c_str(), (float*)&col, ImGuiColorEditFlags_NoInputs)) {
-                value->value = ImGui::ColorConvertFloat4ToU32(col);
+                ImVec4 col = ImGui::ColorConvertU32ToFloat4(value->value);
+                if (ImGui::ColorEdit4(valueName.c_str(), (float*)&col, ImGuiColorEditFlags_NoInputs))
+                    value->value = ImGui::ColorConvertFloat4ToU32(col);
             }
         }
 

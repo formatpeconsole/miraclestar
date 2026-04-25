@@ -124,6 +124,7 @@ void onRender(IDXGISwapChain* pSwapChain)
                 slider::render(getMenuInstance().rage.hitChance);
                 slider::render(getMenuInstance().rage.minDamage);
                 multicombobox::render(getMenuInstance().rage.hitBoxes);
+                slider::render(getMenuInstance().rage.aimRandomize);
                 colorpicker::render(getMenuInstance().rage.aimHitboxColor);
 
                 if (ImGui::SmallButton("Save"))
@@ -134,8 +135,6 @@ void onRender(IDXGISwapChain* pSwapChain)
             }
             ImGui::End();
         }
-
-        binds::renderDebugBindsWindow();
 
         ImGui::EndFrame();
         ImGui::Render();

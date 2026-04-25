@@ -110,7 +110,6 @@
     <ClCompile Include="deps\imguiFramework\imgui_impl_win32.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_tables.cpp" />
     <ClCompile Include="deps\imguiFramework\imgui_widgets.cpp" />
-    <ClCompile Include="guiItems\items.cpp" />
     <ClCompile Include="gui\binds\binds.cpp" />
     <ClCompile Include="gui\binds\utils.cpp" />
     <ClCompile Include="gui\gui.cpp" />

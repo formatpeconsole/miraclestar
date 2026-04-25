@@ -25,7 +25,6 @@
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="gui\gui.cpp" />
     <ClCompile Include="gui\binds\binds.cpp" />
-    <ClCompile Include="guiItems\items.cpp" />
     <ClCompile Include="utils\uuid.cpp" />
     <ClCompile Include="config\config.cpp" />
     <ClCompile Include="gui\binds\utils.cpp" />

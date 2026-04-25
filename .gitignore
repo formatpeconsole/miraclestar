@@ -45,3 +45,6 @@
 x64
 Debug
 Release
+
+# vcpkg dependencies
+vcpkg-installed/

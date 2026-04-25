@@ -131,5 +131,7 @@ struct Menu
 extern void init();
 extern void destroy();
 
+extern void renderMainUI();
+
 extern Menu& getMenuInstance();
 }

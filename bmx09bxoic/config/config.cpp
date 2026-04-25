@@ -70,7 +70,21 @@ template<typename T>
 void addItem(nlohmann::json& jsonToWrite, const Item<T>& item)
 {
     auto& itemJson = jsonToWrite;
-    itemJson["value"] = item.value;
+
+    T valueToRead = item.value;
+
+    auto activeBind = getMenuInstance().keyBindManager.findBindByItem(&item.value);
+    if (activeBind != nullptr)
+    {
+        bool pressed = activeBind->getPressed();
+        if (activeBind->getType() == BIND_RELEASE)
+            pressed = !activeBind->getPressed();
+
+        if (pressed && item.oldValue.wrote)
+            valueToRead = item.oldValue.value;
+    }
+
+    itemJson["value"] = valueToRead;
     itemJson["itemType"] = getItemType(item.itemType);
     itemJson["binds"] = nlohmann::json::array();
     for (auto& i : item.binds)

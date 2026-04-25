@@ -299,6 +299,19 @@ public:
     }
 
     template<typename T>
+    std::shared_ptr<IKeyBind> findBindByItem(T* itemPtr)
+    {
+        const auto it = std::find_if(keyBinds.begin(), keyBinds.end(), [itemPtr](const std::shared_ptr<IKeyBind>& bind) {
+            return bind->getItemPtr() == itemPtr;
+            });
+        if (it != keyBinds.end())
+        {
+            return *it;
+        }
+        return {};
+    }
+
+    template<typename T>
     std::shared_ptr<IKeyBind> findBind(T* bindPtr)
     {
         const auto it = std::find_if(keyBinds.begin(), keyBinds.end(), [bindPtr](const std::shared_ptr<IKeyBind>& bind) {

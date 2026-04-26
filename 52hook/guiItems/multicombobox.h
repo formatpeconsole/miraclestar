@@ -34,7 +34,7 @@ inline void addMultiComboBoxBind(MultiComboBox& multiComboBox)
 
 inline decltype(&addMultiComboBoxBind) multiComboBoxBindCallback = addMultiComboBoxBind;
 
-inline std::string GetFlagPreview(uint32_t flags, const std::vector<std::string>& items)
+inline std::string getActiveItems(uint32_t flags, const std::vector<std::string>& items)
 {
     std::string preview;
     bool first = true;
@@ -71,7 +71,7 @@ inline void render(MultiComboBox& multiComboBox)
     {
         auto comboSize = static_cast<int>(item.itemsList.size());
 
-        std::string preview = GetFlagPreview(item.value, item.itemsList);
+        std::string preview = getActiveItems(item.value, item.itemsList);
         if (ImGui::BeginCombo(item.name.c_str(), preview.c_str()))
         {
             for (int i = 0; i < comboSize; ++i)
@@ -200,7 +200,7 @@ inline void render(MultiComboBox& multiComboBox)
             {
                 auto comboSize = static_cast<int>(item.itemsList.size());
 
-                std::string preview = GetFlagPreview(value->value, item.itemsList);
+                std::string preview = getActiveItems(value->value, item.itemsList);
                 if (ImGui::BeginCombo(valueName.c_str(), preview.c_str()))
                 {
                     for (int i = 0; i < comboSize; ++i)

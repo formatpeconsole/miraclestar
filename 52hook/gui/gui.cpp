@@ -58,7 +58,13 @@ std::optional<std::vector<std::string>> getItemList(void* ptr, int type)
     }
 }
 
-std::string GetFormattedText(const std::string& text)
+// get text without hashtags for ui naming
+// for example
+// we have name of item in UI called "Hit Chance##rage"
+// but ##rage is used just to make unique hash
+// so for UI Bind list better visualize name without this unique hash
+// in result it will be "Hit Chance"
+std::string getFormattedText(const std::string& text)
 {
     size_t pos = text.find("##");
     if (pos == std::string::npos)
@@ -67,9 +73,9 @@ std::string GetFormattedText(const std::string& text)
     return text.substr(0, pos);
 }
 
-std::string GetCorrectBindValue(const std::string& value, 
-    int itemType, 
-    const std::optional<std::vector<std::string>>& selectionList)
+// in KeyBindManager i had to save value in string format for UI purposes
+// now you have to get this value and visualize in ur UI however you want
+std::string getBindValueFromString(const std::string& value, void* ptr, int itemType)
 {
     switch (itemType)
     {
@@ -81,26 +87,28 @@ std::string GetCorrectBindValue(const std::string& value,
         return value;
     case ITEM_COMBOBOX:
     {
-        if (selectionList.has_value())
+        auto list = getItemList(ptr, itemType);
+        if (list.has_value())
         {
             int index = std::stoi(value);
-            if (index < 0 || index >= selectionList->size())
+            if (index < 0 || index >= list->size())
                 return "Invalid";
 
-            return selectionList->at(index);
+            return list->at(index);
         }
         return {};
     }
     break;
     case ITEM_MULTICOMBOBOX:
     {
-        if (selectionList.has_value())
+        auto list = getItemList(ptr, itemType);
+        if (list.has_value())
         {
             unsigned int index = std::stoul(value);
             if (index == 0)
                 return "Invalid";
 
-            return gui::multicombobox::GetFlagPreview(index, selectionList.value());
+            return gui::multicombobox::getActiveItems(index, list.value());
         }
         return {};
     }
@@ -134,38 +142,31 @@ void renderBindsDebugWindow()
 {
     ImGui::Begin("BIND LIST", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
-        ImGui::Text("Active binds:");
-        ImGui::Separator();
-
-        auto& allItems = getMenuInstance().items;
         auto& binds = getMenuInstance().keyBindManager.getBindList();
+        auto& itemsInMemory = getMenuInstance().itemsInMemory;
         for (auto it = binds.begin(); it != binds.end(); ++it)
         {
             auto item = (*it);
             if (item->getItemType() == ITEM_UI_OPEN)
                 continue;
 
-            auto foundItem = std::find_if(allItems.begin(), allItems.end(), [item](const std::pair<void*, int>& pair) {
-                return getItemValuePointerFromItemPointer(pair.first, pair.second) == item->getItemPtr()
-                    && pair.second == item->getItemType();
-            });
+            auto itemThatBindUse = std::find_if(itemsInMemory.begin(), itemsInMemory.end(), [item](const std::pair<void*, int>& pair) {
+                return getItemValuePointerFromItemPointer(pair.first, pair.second) == item->getItemPtr();
+                });
 
-            if (foundItem == allItems.end())
+            if (itemThatBindUse == itemsInMemory.end())
                 continue;
 
-            bool isActive = item->getType() == BIND_RELEASE ? !item->getPressed() : item->getPressed();
-            if (isActive)
+            bool keyPressed = item->getType() == BIND_RELEASE ? !item->getPressed() : item->getPressed();
+            if (keyPressed)
             {
-                std::string bindValue = GetCorrectBindValue(
-                    item->getBindValue(), 
-                    item->getItemType(),
-                    getItemList(foundItem->first, foundItem->second));
-
+                // bind format would be:
                 // [+] ItemName -> Value (BindMode)
+                std::string bindValue = getBindValueFromString(item->getBindValue(), itemThatBindUse->first, itemThatBindUse->second);
                 std::string infoBegin = "[+] " + item->getItemName();
                 std::string infoEnd = " -> " + bindValue + " (" + gui::binds::getBindMode(item->getType()) + ")";
 
-                ImGui::Text("%s%s", GetFormattedText(infoBegin).c_str(), infoEnd.c_str());
+                ImGui::Text("%s%s", getFormattedText(infoBegin).c_str(), infoEnd.c_str());
             }
         }
     }

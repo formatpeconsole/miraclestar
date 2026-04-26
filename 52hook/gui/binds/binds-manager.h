@@ -12,7 +12,7 @@
 
 namespace gui::binds
 {
-constexpr auto MAX_BINDS = 1000;
+constexpr auto MAX_BINDS = 1024;
 
 enum BindType
 {

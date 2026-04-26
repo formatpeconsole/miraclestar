@@ -47,4 +47,4 @@ Debug
 Release
 
 # vcpkg dependencies
-vcpkg-installed/
+vcpkg_installed/

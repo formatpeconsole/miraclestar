@@ -123,6 +123,7 @@ struct RageTab
     };
 };
 
+using itemsInMemoryList = std::vector<std::pair<void*, int>>;
 struct Menu
 {
     ItemOldValue<bool> openedOldValue{};
@@ -131,7 +132,7 @@ struct Menu
 
     RageTab rage;
 
-    std::vector<std::pair<void*, int>> items{
+    itemsInMemoryList itemsInMemory{
         { static_cast<void*>(&rage.enable.item), rage.enable.item.itemType },
         { static_cast<void*>(&rage.hitChance.item), rage.hitChance.item.itemType },
         { static_cast<void*>(&rage.minDamage.item), rage.minDamage.item.itemType },

@@ -18,8 +18,7 @@ Multi-Bind system allows users to customize any item by binding any amount of bi
 
 How it looks (using ImGui for example)
 
-![](https://i.imgur.com/2Yz3AIO.jpeg)
-![](https://i.imgur.com/OkBlakE.png)
+![](https://iili.io/BiUXc3g.png)
 
 ### Benefits:
 - Key-Locking system. When user adds multiple binds on same item and tries to press different buttons - it will lock other binds except pressed one on this item till user stops pressing main bind.

@@ -143,6 +143,7 @@ void renderBindsDebugWindow()
     ImGui::Begin("BIND LIST", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     {
         auto& binds = getMenuInstance().keyBindManager.getBindList();
+        
         auto& itemsInMemory = getMenuInstance().itemsInMemory;
         for (auto it = binds.begin(); it != binds.end(); ++it)
         {
@@ -179,7 +180,7 @@ void renderMainUI()
     {
         ImGui::SetNextWindowSize(ImVec2(780, 650));
 
-        std::string windowTitle = "52HOOK - " + std::string(__DATE__);
+        std::string windowTitle = "BMX09BXOIC - " + std::string(__DATE__);
         ImGui::Begin(windowTitle.c_str(), &getMenuInstance().opened, ImGuiWindowFlags_NoResize);
         {
             using namespace gui::items;
